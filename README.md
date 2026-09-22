@@ -1,6 +1,10 @@
 # Chrome Appearance Switcher
 
-> Switch the **actual Chrome browser UI** (tabs, toolbar, omnibox, and frame) between **Light** and **Dark** mode directly from an extension popup.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Chrome MV3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-success.svg)](#)
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue.svg)](#)
+
+> Switch the **actual Chrome browser UI** (tabs, toolbar, omnibox, and frame) between **Light** and **Dark** mode directly from an extension popup or global hotkey.
 
 ---
 
@@ -87,13 +91,23 @@ chrome-appearance-switcher/
 
 ---
 
-## 📦 Creating a Client Delivery Package
+---
 
-To build a clean, client-ready `.zip` delivery bundle:
+## 🔒 Privacy & Security
 
-1. Double-click **`build_release.bat`** (or run `powershell -File build_release.ps1`).
-2. It automatically packages:
-   - `Chrome-Extension/` (clean unpacked extension without clutter)
-   - `Native-Host-Installer/` (1-click installer scripts)
-   - `CLIENT_INSTALLATION_GUIDE.md` (clear 60-second setup instructions)
-3. Outputs **`Chrome-Appearance-Switcher-v1.0.0.zip`** in the project root ready to upload to your client!
+- **100% Local Execution**: All operations occur strictly on your machine.
+- **Zero Telemetry / Analytics**: No external servers, analytics, tracking, or network requests are made.
+- **Minimal Permissions**: Uses only `nativeMessaging`, `storage`, and `tabs`. Zero host permissions or web scraping.
+
+---
+
+## 🤝 Contributing
+
+Contributions, bug reports, and feature requests are welcome!  
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to set up the project locally and submit pull requests.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
