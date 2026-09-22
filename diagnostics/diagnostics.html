@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Diagnostics - Chrome Appearance Switcher</title>
+  <link rel="stylesheet" href="diagnostics.css">
+</head>
+<body>
+  <div class="diag-container">
+    <!-- Header -->
+    <header class="diag-header">
+      <div class="brand-row">
+        <div class="logo-box">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+        </div>
+        <div class="title-meta">
+          <h1>System Diagnostics</h1>
+          <p class="subtitle">Chrome Appearance Switcher Subsystem Verification</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-version" id="extVersionBadge">Extension v1.0.0</span>
+        <span class="badge badge-status" id="overallStatusBadge">Ready to Test</span>
+      </div>
+    </header>
+
+    <!-- Main Diagnostic Suite Card -->
+    <main class="diag-card suite-card">
+      <div class="suite-header">
+        <div class="suite-title-group">
+          <h2>Subsystem Health</h2>
+          <p>Verifies the 6 key subsystems required for native Chrome frame & toolbar switching.</p>
+        </div>
+        <div class="suite-actions">
+          <button class="btn btn-primary" id="btnRunTest">
+            <svg class="btn-icon play-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span id="btnRunTestText">Run Test</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Test Checklist Rows -->
+      <div class="checklist" id="checklist">
+        <!-- 1. Chrome Browser -->
+        <div class="check-item" id="itemChrome" data-status="pending">
+          <div class="check-lead">
+            <div class="status-indicator">
+              <span class="icon-pending">○</span>
+              <span class="icon-running spinner"></span>
+              <span class="icon-success">✓</span>
+              <span class="icon-failure">✕</span>
+            </div>
+            <div class="check-label">
+              <div class="label-name">Chrome</div>
+              <div class="label-desc" id="chromeDesc">Checking browser environment and runtime...</div>
+            </div>
+          </div>
+          <div class="check-result" id="chromeResult">Pending</div>
+        </div>
+
+        <!-- 2. Extension Runtime -->
+        <div class="check-item" id="itemExtension" data-status="pending">
+          <div class="check-lead">
+            <div class="status-indicator">
+              <span class="icon-pending">○</span>
+              <span class="icon-running spinner"></span>
+              <span class="icon-success">✓</span>
+              <span class="icon-failure">✕</span>
+            </div>
+            <div class="check-label">
+              <div class="label-name">Extension</div>
+              <div class="label-desc" id="extensionDesc">Checking Manifest V3 ID and permissions...</div>
+            </div>
+          </div>
+          <div class="check-result" id="extensionResult">Pending</div>
+        </div>
+
+        <!-- 3. Native Host Registration -->
+        <div class="check-item" id="itemNativeHost" data-status="pending">
+          <div class="check-lead">
+            <div class="status-indicator">
+              <span class="icon-pending">○</span>
+              <span class="icon-running spinner"></span>
+              <span class="icon-success">✓</span>
+              <span class="icon-failure">✕</span>
+            </div>
+            <div class="check-label">
+              <div class="label-name">Native Host</div>
+              <div class="label-desc" id="nativeHostDesc">Checking Windows registry registration...</div>
+            </div>
+          </div>
+          <div class="check-result" id="nativeHostResult">Pending</div>
+        </div>
+
+        <!-- 4. Native Messaging Connection -->
+        <div class="check-item" id="itemNativeMessaging" data-status="pending">
+          <div class="check-lead">
+            <div class="status-indicator">
+              <span class="icon-pending">○</span>
+              <span class="icon-running spinner"></span>
+              <span class="icon-success">✓</span>
+              <span class="icon-failure">✕</span>
+            </div>
+            <div class="check-label">
+              <div class="label-name">Native Messaging</div>
+              <div class="label-desc" id="nativeMessagingDesc">Testing bidirectional IPC ping and latency...</div>
+            </div>
+          </div>
+          <div class="check-result" id="nativeMessagingResult">Pending</div>
+        </div>
+
+        <!-- 5. Windows Theme API -->
+        <div class="check-item" id="itemThemeApi" data-status="pending">
+          <div class="check-lead">
+            <div class="status-indicator">
+              <span class="icon-pending">○</span>
+              <span class="icon-running spinner"></span>
+              <span class="icon-success">✓</span>
+              <span class="icon-failure">✕</span>
+            </div>
+            <div class="check-label">
+              <div class="label-name">Windows Theme API</div>
+              <div class="label-desc" id="themeApiDesc">Testing registry access to AppsUseLightTheme...</div>
+            </div>
+          </div>
+          <div class="check-result" id="themeApiResult">Pending</div>
+        </div>
+
+        <!-- 6. Chrome Device Mode -->
+        <div class="check-item" id="itemDeviceMode" data-status="pending">
+          <div class="check-lead">
+            <div class="status-indicator">
+              <span class="icon-pending">○</span>
+              <span class="icon-running spinner"></span>
+              <span class="icon-success">✓</span>
+              <span class="icon-failure">✕</span>
+            </div>
+            <div class="check-label">
+              <div class="label-name">Chrome Device Mode</div>
+              <div class="label-desc" id="deviceModeDesc">Verifying Chrome appearance tracks system theme...</div>
+            </div>
+          </div>
+          <div class="check-result" id="deviceModeResult">Pending</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Contextual Remediation Card (Shown if any check fails) -->
+    <section class="diag-card error-card" id="remediationCard" style="display: none;">
+      <div class="error-banner-header">
+        <div class="error-badge-group">
+          <span class="alert-icon">✕</span>
+          <h3 id="remediationTitle">Native Host ✕</h3>
+        </div>
+        <span class="tag tag-danger" id="remediationTag">Action Required</span>
+      </div>
+      <p class="error-message" id="remediationMessage">
+        The native host could not be contacted. Chrome cannot alter the browser frame without the companion host registered in your Windows registry.
+      </p>
+
+      <div class="action-buttons-row">
+        <button class="btn btn-accent" id="btnReinstallHost">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Reinstall Native Host</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btnViewGuide">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>View Installation Guide</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btnCopyReport">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span id="copyReportText">Copy Diagnostic Report</span>
+        </button>
+
+        <button class="btn btn-ghost" id="btnFixChromeSettings" style="display: none;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span>Open Chrome Appearance Settings</span>
+        </button>
+      </div>
+
+      <!-- Quick Command Snippet -->
+      <div class="code-box-wrapper" id="installSnippetBox">
+        <div class="code-box-header">
+          <span>Quick Install Command (Run in extracted host directory)</span>
+          <button class="btn-copy-code" id="btnCopyInstallCommand">Copy Command</button>
+        </div>
+        <pre class="code-box"><code id="codeInstallSnippet">.\install_host.bat</code></pre>
+      </div>
+    </section>
+
+    <!-- Live Interactive Subsystem Sandbox -->
+    <section class="diag-card sandbox-card">
+      <div class="sandbox-header">
+        <div>
+          <h3>Interactive Theme Test</h3>
+          <p>Send a real test payload through the pipeline and observe the OS & browser response.</p>
+        </div>
+        <div class="test-controls">
+          <button class="btn btn-outline" id="btnTestLight">
+            <span>☀️ Test Light Mode</span>
+          </button>
+          <button class="btn btn-outline" id="btnTestDark">
+            <span>🌙 Test Dark Mode</span>
+          </button>
+        </div>
+      </div>
+      <div class="live-telemetry-grid">
+        <div class="telemetry-item">
+          <span class="telemetry-label">AppsUseLightTheme</span>
+          <span class="telemetry-val" id="telemetryApps">-</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">SystemUsesLightTheme</span>
+          <span class="telemetry-val" id="telemetrySys">-</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">IPC Latency</span>
+          <span class="telemetry-val" id="telemetryLatency">-</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Browser Color Scheme</span>
+          <span class="telemetry-val" id="telemetryScheme">-</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Diagnostic Details & Logs Accordion -->
+    <section class="diag-card log-card">
+      <details id="detailsLogs">
+        <summary class="log-summary">
+          <span>Technical Diagnostic Log & System Details</span>
+          <span class="log-summary-hint">Click to expand raw JSON telemetry</span>
+        </summary>
+        <div class="log-content">
+          <div class="log-actions-bar">
+            <span class="log-timestamp" id="logTimestamp">Last Run: Not yet executed</span>
+            <button class="btn-mini" id="btnCopyRawLogs">Copy JSON</button>
+          </div>
+          <pre class="raw-log-viewer" id="rawLogViewer">Click "Run Test" to generate diagnostic log...</pre>
+        </div>
+      </details>
+    </section>
+
+    <!-- Footer -->
+    <footer class="diag-footer">
+      <div class="footer-links">
+        <a href="https://github.com/tljafar/chrome-appearance-switcher" target="_blank" rel="noreferrer">GitHub Repository</a>
+        <span>&bull;</span>
+        <a href="https://github.com/tljafar/chrome-appearance-switcher/issues" target="_blank" rel="noreferrer">Report Issue</a>
+        <span>&bull;</span>
+        <button class="link-btn" id="btnOpenChromeShortcuts">Chrome Shortcuts</button>
+      </div>
+      <p class="copyright">Chrome Appearance Switcher &bull; Open-Source Windows Companion Extension</p>
+    </footer>
+  </div>
+
+  <!-- Installation Guide Modal -->
+  <div class="modal-overlay" id="guideModal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Native Host Installation Guide</h3>
+        <button class="modal-close" id="btnCloseModal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Download or Locate the Host Folder</h4>
+            <p>If you downloaded the extension package, open the <code>host\</code> folder containing <code>install_host.bat</code>, <code>host_launcher.bat</code>, and <code>host.ps1</code>.</p>
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Run the Installer</h4>
+            <p>Double-click <code>install_host.bat</code> (or right-click and choose <i>Run as Administrator</i> if your user account requires elevated registry permissions).</p>
+            <div class="guide-callout">
+              <b>What it does:</b> Registers <code>com.appearance.switcher</code> under <code>HKCU\Software\Google\Chrome\NativeMessagingHosts</code> pointing to <code>host_launcher.bat</code>.
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Set Chrome to "Device" Theme</h4>
+            <p>Navigate to <code>chrome://settings/appearance</code> and select <b>Device</b> so Chrome reflects Windows appearance changes in real time.</p>
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Verify Connection</h4>
+            <p>Return to this Diagnostics page and click <b>[ Run Test ]</b>. All 6 subsystems will show green checkmarks (✓).</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btnModalCloseDone">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="diagnostics.js"></script>
+</body>
+</html>

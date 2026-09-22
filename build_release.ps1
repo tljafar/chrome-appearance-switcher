@@ -57,6 +57,7 @@ Copy-Item (Join-Path $rootDir "manifest.json") $extStagingDir -Force
 Copy-Item (Join-Path $rootDir "popup") $extStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "background") $extStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "newtab") $extStagingDir -Recurse -Force
+Copy-Item (Join-Path $rootDir "diagnostics") $extStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "icons") $extStagingDir -Recurse -Force
 
 # 4. Copy Native Host Files
@@ -112,6 +113,7 @@ Thank you for your order! This package contains everything needed to install and
 
 - **Option 1 (Extension Popup)**: Click the toolbar icon to view status, toggle Light/Dark, preview the live mockup, or customize options.
 - **Option 2 (Global Keyboard Shortcut)**: Press **`Alt + Shift + D`** anywhere in Chrome to instantly switch the browser tabs, toolbar, omnibox, and frame!
+- **Option 3 (System Diagnostics)**: Click **Diagnostics** in the extension popup (or right click the extension icon -> **Options**) to verify all 6 subsystems (Chrome, Extension, Native Host, Native Messaging, Windows Theme API, Device Mode) with 1-click remediation.
 "@
 
 $clientGuidePath = Join-Path $stagingDir "CLIENT_INSTALLATION_GUIDE.md"

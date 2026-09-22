@@ -60,6 +60,10 @@ chrome-appearance-switcher/
 │   ├── popup.html             # High-end popup UI with animated slider, browser preview & shortcut badge
 │   ├── popup.css              # Custom styling, dark/light theme tokens, glassmorphism, kbd badges
 │   └── popup.js               # Event handling, live storage sync, and background communication
+├── diagnostics/
+│   ├── diagnostics.html       # Automated 6-subsystem health & verification suite
+│   ├── diagnostics.css        # Premium diagnostics styling with status badges & modals
+│   └── diagnostics.js         # Automated tests, error remediation, live telemetry sandbox & report export
 ├── background/
 │   └── background.js          # Service worker handling native messaging, commands & state sync
 ├── newtab/
@@ -79,6 +83,7 @@ chrome-appearance-switcher/
 
 ## ✨ Features Included
 
+- **Automated System Diagnostics Suite**: 6-subsystem verification (Chrome detection, Extension runtime, Native Host registration, Native Messaging IPC roundtrip latency, Windows Theme API access, and Chrome Device Mode verification) with 1-click remediation, live telemetry sandbox, and clipboard report export.
 - **Actual Chrome Browser UI Switching**: Changes tab bar, toolbar background, omnibox address bar, and window frame.
 - **Global Keyboard Shortcut (`Alt + Shift + D`)**: Toggle Chrome browser UI instantly from any tab or window.
 - **Independent Windows Shell / Taskbar Sync**: Option to toggle ONLY Chrome/Apps or both Chrome and Windows Taskbar & Start Menu.

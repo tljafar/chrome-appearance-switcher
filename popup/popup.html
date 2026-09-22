@@ -122,7 +122,10 @@
           <span class="host-dot connected" id="hostDot"></span>
           <span class="host-title" id="hostTitle">Native Bridge: Connected</span>
         </div>
-        <button class="test-btn" id="btnTestBridge" title="Test Native Bridge Connection">Test</button>
+        <div style="display: flex; gap: 6px;">
+          <button class="test-btn" id="btnTestBridge" title="Test Native Bridge Connection">Test</button>
+          <button class="test-btn" id="btnOpenDiagnostics" title="Open Full System Diagnostics">Diagnostics</button>
+        </div>
       </div>
       <p class="host-desc" id="hostDesc">
         Directly alters Chrome's native window frame, tab strip, toolbar and omnibox via OS theme hook.
@@ -144,7 +147,7 @@
         <div class="mini-instructions">
           <span>1. Extract ZIP</span> &bull;
           <span>2. Run <code>install_host.bat</code></span> &bull;
-          <span>3. Click <b>Test</b></span>
+          <span>3. <a href="#" id="linkBannerDiagnostics" style="color: inherit; font-weight: 600; text-decoration: underline;">Open Diagnostics</a></span>
         </div>
       </div>
     </section>

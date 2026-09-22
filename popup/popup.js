@@ -135,6 +135,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const btnOpenDiagnostics = document.getElementById("btnOpenDiagnostics");
+  if (btnOpenDiagnostics) {
+    btnOpenDiagnostics.addEventListener("click", () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("diagnostics/diagnostics.html") });
+    });
+  }
+
+  const linkBannerDiagnostics = document.getElementById("linkBannerDiagnostics");
+  if (linkBannerDiagnostics) {
+    linkBannerDiagnostics.addEventListener("click", (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: chrome.runtime.getURL("diagnostics/diagnostics.html") });
+    });
+  }
+
   const btnDownloadHost = document.getElementById("btnDownloadHost");
   if (btnDownloadHost) {
     btnDownloadHost.addEventListener("click", () => {

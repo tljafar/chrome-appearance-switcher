@@ -25,6 +25,10 @@
   "chrome_url_overrides": {
     "newtab": "newtab/newtab.html"
   },
+  "options_ui": {
+    "page": "diagnostics/diagnostics.html",
+    "open_in_tab": true
+  },
   "commands": {
     "toggle-theme": {
       "suggested_key": {
