@@ -1,0 +1,35 @@
+name: Build & Release Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Package Release Archives
+        shell: powershell
+        run: |
+          .\build_release.ps1
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            release/chrome-web-store-*.zip
+            release/native-companion-installer-*.zip
+            Chrome-Appearance-Switcher-*.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true

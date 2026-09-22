@@ -91,6 +91,16 @@ chrome-appearance-switcher/
 
 ---
 
+## 🗺️ Roadmap & Planned Features
+
+- [x] Windows 10 & 11 Native Messaging theme controller
+- [x] Global keyboard shortcut (`Alt + Shift + D`)
+- [x] Instant zero-latency popup hydration
+- [x] Multi-target release packager & GitHub Actions CI/CD
+- [ ] **Auto-Schedule Mode**: Automatic Light/Dark switching based on local sunrise & sunset hours
+- [ ] **macOS Companion Bridge**: AppleScript / `defaults write` companion for macOS dark mode toggle
+- [ ] **Custom Accent Color Palettes**: User-selectable accent colors for the New Tab page
+
 ---
 
 ## 🔒 Privacy & Security
