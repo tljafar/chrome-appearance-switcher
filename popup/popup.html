@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Appearance Switcher</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="preinit.js"></script>
+</head>
+<body class="no-transitions">
+  <div class="app-container" id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Chrome Appearance</h1>
+          <span class="version-tag">Manifest V3</span>
+        </div>
+      </div>
+      <div class="status-pill" id="statusPill">
+        <span class="status-dot"></span>
+        <span class="status-text" id="statusText">Light Mode</span>
+      </div>
+    </header>
+
+    <!-- Main Switcher Card -->
+    <section class="card switch-card">
+      <div class="switch-header">
+        <span class="section-title">Browser Theme</span>
+        <span class="hint-text">Tabs, Toolbar & Omnibox</span>
+      </div>
+
+      <!-- Main Animated Toggle Switch -->
+      <div class="master-toggle-wrapper">
+        <button class="theme-mode-btn" id="btnModeLight" data-mode="light" title="Switch to Light Theme">
+          <svg class="mode-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span>Light</span>
+        </button>
+
+        <label class="switch" for="themeToggle">
+          <input type="checkbox" id="themeToggle" aria-label="Toggle Chrome Appearance">
+          <span class="slider">
+            <span class="slider-thumb">
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+              </svg>
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </span>
+          </span>
+        </label>
+
+        <button class="theme-mode-btn" id="btnModeDark" data-mode="dark" title="Switch to Dark Theme">
+          <svg class="mode-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span>Dark</span>
+        </button>
+      </div>
+
+      <!-- Live Interactive Browser UI Mockup -->
+      <div class="browser-mockup" id="browserMockup">
+        <!-- Mockup Tab Strip -->
+        <div class="mockup-tabstrip">
+          <div class="mockup-tab active">
+            <span class="mockup-tab-favicon"></span>
+            <span class="mockup-tab-title">New Tab</span>
+            <span class="mockup-tab-close">×</span>
+          </div>
+          <div class="mockup-tab inactive">
+            <span class="mockup-tab-favicon"></span>
+            <span class="mockup-tab-title">Google</span>
+          </div>
+          <span class="mockup-newtab-btn">+</span>
+        </div>
+        <!-- Mockup Toolbar & Omnibox -->
+        <div class="mockup-toolbar">
+          <div class="mockup-nav-btns">
+            <span class="nav-dot"></span>
+            <span class="nav-dot"></span>
+            <span class="nav-dot"></span>
+          </div>
+          <div class="mockup-omnibox">
+            <svg class="lock-icon" viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </svg>
+            <span class="omnibox-text">chrome://newtab</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Native Bridge Status / Diagnostics -->
+    <section class="card host-card" id="hostStatusCard">
+      <div class="host-status-header">
+        <div class="host-info">
+          <span class="host-dot connected" id="hostDot"></span>
+          <span class="host-title" id="hostTitle">Native Bridge: Connected</span>
+        </div>
+        <button class="test-btn" id="btnTestBridge" title="Test Native Bridge Connection">Test</button>
+      </div>
+      <p class="host-desc" id="hostDesc">
+        Directly alters Chrome's native window frame, tab strip, toolbar and omnibox via OS theme hook.
+      </p>
+      <div class="host-install-banner" id="hostInstallBanner" style="display: none;">
+        <div class="banner-badge-row">
+          <span class="warning-badge">Companion Needed</span>
+          <span class="os-badge">Windows 10 / 11</span>
+        </div>
+        <p class="banner-text">Chrome extensions require a native bridge to alter the OS-drawn browser frame, tabs & toolbar.</p>
+        <button class="download-host-btn" id="btnDownloadHost">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Download Native Companion</span>
+        </button>
+        <div class="mini-instructions">
+          <span>1. Extract ZIP</span> &bull;
+          <span>2. Run <code>install_host.bat</code></span> &bull;
+          <span>3. Click <b>Test</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional Controls & Options -->
+    <section class="card options-card">
+      <div class="option-item">
+        <div class="option-label">
+          <span class="opt-name">Sync Windows Taskbar & Shell</span>
+          <span class="opt-desc">Toggle Taskbar & Start Menu alongside Chrome</span>
+        </div>
+        <label class="mini-switch" for="syncSystemToggle">
+          <input type="checkbox" id="syncSystemToggle" checked>
+          <span class="mini-slider"></span>
+        </label>
+      </div>
+
+      <div class="option-divider"></div>
+
+      <div class="option-item">
+        <div class="option-label">
+          <span class="opt-name">Chrome Appearance Settings</span>
+          <span class="opt-desc">Verify Chrome's Mode is set to 'Device'</span>
+        </div>
+        <button class="action-btn" id="btnOpenChromeSettings">
+          <span>Open</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="option-divider"></div>
+
+      <div class="option-item">
+        <div class="option-label">
+          <span class="opt-name">Keyboard Shortcut</span>
+          <span class="opt-desc">Toggle anywhere without opening popup</span>
+        </div>
+        <button class="action-btn shortcut-key-badge" id="btnOpenShortcuts" title="Click to customize in Chrome Shortcuts">
+          <kbd>Alt</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>D</kbd>
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 2px;">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Chrome Browser UI Appearance Controller</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

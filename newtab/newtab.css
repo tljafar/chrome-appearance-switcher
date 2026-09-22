@@ -1,0 +1,227 @@
+/* New Tab Page - Matching Chrome Browser Theme */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Light Mode */
+  --nt-bg: #ffffff;
+  --nt-bg-grad: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  --nt-text: #1e293b;
+  --nt-text-muted: #64748b;
+  --nt-card-bg: rgba(255, 255, 255, 0.85);
+  --nt-card-border: rgba(226, 232, 240, 0.9);
+  --nt-omnibox-bg: #f1f3f4;
+  --nt-omnibox-border: #dadce0;
+  --nt-accent: #4f46e5;
+  --nt-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+body.dark-mode {
+  /* Dark Mode */
+  --nt-bg: #121212;
+  --nt-bg-grad: linear-gradient(180deg, #18191c 0%, #0d0e11 100%);
+  --nt-text: #f8fafc;
+  --nt-text-muted: #94a3b8;
+  --nt-card-bg: rgba(32, 33, 36, 0.85);
+  --nt-card-border: rgba(60, 64, 67, 0.8);
+  --nt-omnibox-bg: #202124;
+  --nt-omnibox-border: #3c4043;
+  --nt-accent: #818cf8;
+  --nt-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--nt-bg-grad);
+  background-color: var(--nt-bg);
+  color: var(--nt-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.4s ease, color 0.4s ease;
+  overflow: hidden;
+}
+
+.newtab-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 32px;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.extension-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nt-text-muted);
+}
+
+.theme-quick-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--nt-card-bg);
+  border: 1px solid var(--nt-card-border);
+  border-radius: 9999px;
+  box-shadow: var(--nt-shadow);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.theme-quick-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Center Content */
+.center-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  margin-top: -40px;
+}
+
+.clock-widget {
+  text-align: center;
+}
+
+.time-display {
+  font-size: 76px;
+  font-weight: 200;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.date-display {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--nt-text-muted);
+  margin-bottom: 4px;
+}
+
+.greeting-display {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--nt-accent);
+}
+
+/* Search Form */
+.search-form {
+  width: 100%;
+  max-width: 580px;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--nt-omnibox-bg);
+  border: 1px solid var(--nt-omnibox-border);
+  border-radius: 9999px;
+  padding: 12px 20px;
+  box-shadow: var(--nt-shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input-wrapper:focus-within {
+  background: var(--nt-card-bg);
+  border-color: var(--nt-accent);
+  box-shadow: 0 6px 24px rgba(79, 70, 229, 0.18);
+  transform: scale(1.01);
+}
+
+.search-icon {
+  color: var(--nt-text-muted);
+  margin-right: 12px;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--nt-text);
+}
+
+.search-input::placeholder {
+  color: var(--nt-text-muted);
+}
+
+/* Shortcuts */
+.shortcuts-grid {
+  display: flex;
+  gap: 20px;
+}
+
+.shortcut-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--nt-text);
+  font-size: 12px;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.shortcut-item:hover {
+  transform: translateY(-2px);
+}
+
+.shortcut-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--nt-card-bg);
+  border: 1px solid var(--nt-card-border);
+  box-shadow: var(--nt-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.shortcut-item:hover .shortcut-icon {
+  background: var(--nt-omnibox-bg);
+}
+
+.shortcut-icon.google { color: #4285f4; }
+.shortcut-icon.github { color: var(--nt-text); }
+.shortcut-icon.youtube { color: #ef4444; }
+.shortcut-icon.appearance { font-size: 18px; }
+
+/* Bottom Bar */
+.bottom-bar {
+  text-align: center;
+}
+
+.footer-tip {
+  font-size: 12px;
+  color: var(--nt-text-muted);
+  opacity: 0.8;
+}

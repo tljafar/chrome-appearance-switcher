@@ -1,0 +1,9 @@
+{
+  "name": "com.appearance.switcher",
+  "description": "Chrome Appearance Switcher Native Host",
+  "path": "host_launcher.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://pmemlchnjmekopkkmjbbhfcfbmpbkclo/"
+  ]
+}

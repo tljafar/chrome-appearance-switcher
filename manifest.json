@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Chrome Appearance Switcher",
+  "version": "1.0.0",
+  "description": "Switch actual Chrome browser UI (tabs, toolbar, omnibox, and frame) between Light and Dark mode.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArbGFVl6K8W99/e6pDsleX33Tq+WuuFSPURXi8hJwMogcCsa4L/fCJiZECDla2vOeo2sEq0tN2ObJoz5mr29clsZWWwxRTPY7qC2kRyXLJxt+2VFByY8dPauK4NXUU0gypTzemr68LRV/ZamgX5KzeInidpl6Sl/nK99liTXT9ZpcMq6oIoIMq/zElG7xzCTItcb2GjyqDAdtFZu+fJvD0V+c0k7SPRkw4pvFQxM6yn8iy+ypGpHcY/7/es0yCErTL2uYMC1U2V9JRGL+6sDQd5SLbw3poif4GopPEuKsvz4W+ggLrAHwdxKwnYiB73AwW1M81OgY+SQ5LRW7iMKo2wIDAQAB",
+  "permissions": [
+    "nativeMessaging",
+    "storage",
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Chrome Appearance Switcher"
+  },
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab/newtab.html"
+  },
+  "commands": {
+    "toggle-theme": {
+      "suggested_key": {
+        "default": "Alt+Shift+D",
+        "mac": "Alt+Shift+D"
+      },
+      "description": "Toggle Chrome Browser Appearance (Light / Dark)"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

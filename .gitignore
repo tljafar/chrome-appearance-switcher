@@ -1,0 +1,40 @@
+# Release & Build Artifacts
+release/
+dist/
+*.zip
+*.crx
+
+# Node / Dependencies (if ever added)
+node_modules/
+package-lock.json
+
+# Private Keys & Certificates
+*.pem
+*.der
+*.pfx
+*.p12
+*.key
+
+# Local Host Configuration Overrides
+host/webstore_id.txt
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Editor & IDE Directories
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# Logs & Temporary Files
+*.log
+*.tmp
