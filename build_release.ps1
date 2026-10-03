@@ -70,12 +70,12 @@ Copy-Item (Join-Path $rootDir "newtab") $webStoreStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "diagnostics") $webStoreStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "icons") $webStoreStagingDir -Recurse -Force
 
-# Read manifest, strip "key", and save clean version for Web Store
-$wsManifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
-$wsManifest.PSObject.Properties.Remove("key")
-$wsManifestJson = ($wsManifest | ConvertTo-Json -Depth 10)
+# Read original pretty-formatted manifest and strip the "key" property line cleanly
+$rawManifest = Get-Content $manifestPath -Raw
+# Remove "key": "...", line while keeping perfect 2-space pretty JSON structure
+$wsManifestJson = $rawManifest -replace '(?m)^\s*"key":\s*"[^"]*",?\r?\n', ''
 Set-Content -Path (Join-Path $webStoreStagingDir "manifest.json") -Value $wsManifestJson -Encoding UTF8
-Write-Host "      Generated Chrome Web Store manifest (removed 'key' field)" -ForegroundColor Gray
+Write-Host "      Generated Chrome Web Store manifest (pretty JSON, removed 'key' field)" -ForegroundColor Gray
 
 # 4. Copy Native Host Files
 Write-Host "[4/5] Packaging native host installer components..." -ForegroundColor Yellow
