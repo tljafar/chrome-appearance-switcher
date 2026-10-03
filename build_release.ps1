@@ -31,6 +31,7 @@ Write-Host "[1/5] Parsed extension version: v$version" -ForegroundColor Green
 $releaseDir = Join-Path $rootDir "release"
 $stagingDir = Join-Path $releaseDir "staging"
 $extStagingDir = Join-Path $stagingDir "Chrome-Extension"
+$webStoreStagingDir = Join-Path $stagingDir "Chrome-Web-Store"
 $hostStagingDir = Join-Path $stagingDir "Native-Host-Installer"
 
 # Target Zip Paths
@@ -46,6 +47,7 @@ if (Test-Path $webStoreZip) { Remove-Item -Path $webStoreZip -Force }
 if (Test-Path $companionZip) { Remove-Item -Path $companionZip -Force }
 
 New-Item -ItemType Directory -Force -Path $extStagingDir | Out-Null
+New-Item -ItemType Directory -Force -Path $webStoreStagingDir | Out-Null
 New-Item -ItemType Directory -Force -Path $hostStagingDir | Out-Null
 
 Write-Host "[2/5] Created clean staging directory structure..." -ForegroundColor Green
@@ -53,12 +55,27 @@ Write-Host "[2/5] Created clean staging directory structure..." -ForegroundColor
 # 3. Copy Extension Files
 Write-Host "[3/5] Packaging extension components..." -ForegroundColor Yellow
 
+# 3a. For local unpacked testing / client delivery (includes "key" for fixed ID)
 Copy-Item (Join-Path $rootDir "manifest.json") $extStagingDir -Force
 Copy-Item (Join-Path $rootDir "popup") $extStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "background") $extStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "newtab") $extStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "diagnostics") $extStagingDir -Recurse -Force
 Copy-Item (Join-Path $rootDir "icons") $extStagingDir -Recurse -Force
+
+# 3b. For Chrome Web Store (Google STRICTLY forbids the "key" property in uploaded zips)
+Copy-Item (Join-Path $rootDir "popup") $webStoreStagingDir -Recurse -Force
+Copy-Item (Join-Path $rootDir "background") $webStoreStagingDir -Recurse -Force
+Copy-Item (Join-Path $rootDir "newtab") $webStoreStagingDir -Recurse -Force
+Copy-Item (Join-Path $rootDir "diagnostics") $webStoreStagingDir -Recurse -Force
+Copy-Item (Join-Path $rootDir "icons") $webStoreStagingDir -Recurse -Force
+
+# Read manifest, strip "key", and save clean version for Web Store
+$wsManifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+$wsManifest.PSObject.Properties.Remove("key")
+$wsManifestJson = ($wsManifest | ConvertTo-Json -Depth 10)
+Set-Content -Path (Join-Path $webStoreStagingDir "manifest.json") -Value $wsManifestJson -Encoding UTF8
+Write-Host "      Generated Chrome Web Store manifest (removed 'key' field)" -ForegroundColor Gray
 
 # 4. Copy Native Host Files
 Write-Host "[4/5] Packaging native host installer components..." -ForegroundColor Yellow
@@ -138,13 +155,16 @@ Set-Content -Path (Join-Path $hostStagingDir "README.txt") -Value $companionRead
 # 5. Compress packages
 Write-Host "[5/5] Compressing multi-target packages..." -ForegroundColor Yellow
 
-# Target 1: Chrome Web Store Zip (contains root contents of Chrome-Extension)
-Compress-Archive -Path "$extStagingDir\*" -DestinationPath $webStoreZip -CompressionLevel Optimal
+# Target 1: Chrome Web Store Zip (contains clean build WITHOUT "key" field)
+Compress-Archive -Path "$webStoreStagingDir\*" -DestinationPath $webStoreZip -CompressionLevel Optimal
+
+# Remove temporary Web Store staging folder so it is not in the client delivery bundle
+Remove-Item -Path $webStoreStagingDir -Recurse -Force
 
 # Target 2: Standalone Native Companion Installer Zip
 Compress-Archive -Path "$hostStagingDir\*" -DestinationPath $companionZip -CompressionLevel Optimal
 
-# Target 3: All-In-One Client Delivery Bundle Zip
+# Target 3: All-In-One Client Delivery Bundle Zip (contains Chrome-Extension + Native-Host-Installer)
 Compress-Archive -Path "$stagingDir\*" -DestinationPath $allInOneZip -CompressionLevel Optimal
 
 # Cleanup staging temp folder
