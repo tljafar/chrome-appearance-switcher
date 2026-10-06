@@ -1,4 +1,4 @@
-﻿// System Diagnostics Controller - Chrome Appearance Switcher
+// System Diagnostics Controller - Chrome Appearance Switcher
 // Pure Vanilla JS, Manifest V3 CSP Compliant
 
 const NATIVE_HOST = "com.appearance.switcher";
@@ -416,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnTestLight.textContent = "Switching...";
     const res = await setNativeTheme("light");
     btnTestLight.disabled = false;
-    btnTestLight.textContent = "â˜€ï¸ Test Light Mode";
+    btnTestLight.textContent = "\u2600\uFE0F Test Light Mode";
     if (res.ok) {
       telemetryApps.textContent = "1 (Light)";
       telemetrySys.textContent = "1 (Light)";
@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnTestDark.textContent = "Switching...";
     const res = await setNativeTheme("dark");
     btnTestDark.disabled = false;
-    btnTestDark.textContent = "ðŸŒ™ Test Dark Mode";
+    btnTestDark.textContent = "\uD83C\uDF19 Test Dark Mode";
     if (res.ok) {
       telemetryApps.textContent = "0 (Dark)";
       telemetrySys.textContent = "0 (Dark)";
