@@ -149,11 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       if (chromeMatch && isWindows) {
-        setItemStatus(itemChrome, chromeResult, "success", "âœ“ Detected", chromeDesc, `Google Chrome v${chromeVer} on Windows (x64)`);
+        setItemStatus(itemChrome, chromeResult, "success", "\u2713 Detected", chromeDesc, `Google Chrome v${chromeVer} on Windows (x64)`);
       } else if (chromeMatch) {
-        setItemStatus(itemChrome, chromeResult, "success", "âœ“ Detected", chromeDesc, `Google Chrome v${chromeVer} (${navigator.platform})`);
+        setItemStatus(itemChrome, chromeResult, "success", "\u2713 Detected", chromeDesc, `Google Chrome v${chromeVer} (${navigator.platform})`);
       } else {
-        setItemStatus(itemChrome, chromeResult, "failure", "âœ• Warning", chromeDesc, "Running on unsupported browser environment");
+        setItemStatus(itemChrome, chromeResult, "failure", "\u2716 Warning", chromeDesc, "Running on unsupported browser environment");
         report.errors.push("Non-Chrome browser detected.");
       }
 
@@ -171,9 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       if (extId && manifest.manifest_version === 3) {
-        setItemStatus(itemExtension, extensionResult, "success", "âœ“ Running", extensionDesc, `Manifest V3 &bull; ID: ${extId.substring(0, 16)}...`);
+        setItemStatus(itemExtension, extensionResult, "success", "\u2713 Running", extensionDesc, `Manifest V3 &bull; ID: ${extId.substring(0, 16)}...`);
       } else {
-        setItemStatus(itemExtension, extensionResult, "failure", "âœ• Error", extensionDesc, "Extension runtime invalid or missing permissions");
+        setItemStatus(itemExtension, extensionResult, "failure", "\u2716 Error", extensionDesc, "Extension runtime invalid or missing permissions");
         report.errors.push("Extension runtime invalid.");
       }
 
@@ -195,8 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
         report.nativeMessaging.connected = true;
         report.nativeMessaging.response = pingResult.response;
 
-        setItemStatus(itemNativeHost, nativeHostResult, "success", "âœ“ Installed", nativeHostDesc, "Host registered in HKCU NativeMessagingHosts");
-        setItemStatus(itemNativeMessaging, nativeMessagingResult, "success", "âœ“ Connected", nativeMessagingDesc, `IPC Ping roundtrip OK (${latencyMs}ms latency)`);
+        setItemStatus(itemNativeHost, nativeHostResult, "success", "\u2713 Installed", nativeHostDesc, "Host registered in HKCU NativeMessagingHosts");
+        setItemStatus(itemNativeMessaging, nativeMessagingResult, "success", "\u2713 Connected", nativeMessagingDesc, `IPC Ping roundtrip OK (${latencyMs}ms latency)`);
       } else {
         // Native Host connection failed
         report.nativeHost.installed = false;
@@ -207,33 +207,33 @@ document.addEventListener("DOMContentLoaded", () => {
         report.errors.push(`Native Host connection failed: ${errMsg}`);
 
         if (errMsg.includes("Specified native messaging host not found")) {
-          setItemStatus(itemNativeHost, nativeHostResult, "failure", "âœ• Not Registered", nativeHostDesc, "Registry key HKCU\\...\\com.appearance.switcher missing");
-          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "âœ• Disconnected", nativeMessagingDesc, "Cannot connect: Host is not registered");
+          setItemStatus(itemNativeHost, nativeHostResult, "failure", "\u2716 Not Registered", nativeHostDesc, "Registry key HKCU\\...\\com.appearance.switcher missing");
+          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "\u2716 Disconnected", nativeMessagingDesc, "Cannot connect: Host is not registered");
           showRemediation(
-            "Native Host âœ•",
+            "Native Host \u2716",
             "The native host could not be contacted because it is not registered in the Windows registry. Chrome extensions cannot alter the OS browser frame without this companion.",
             "Run install_host.bat to register the companion host in your registry."
           );
         } else if (errMsg.includes("Access to the specified native messaging host is forbidden")) {
-          setItemStatus(itemNativeHost, nativeHostResult, "failure", "âœ• ID Mismatch", nativeHostDesc, "allowed_origins in host manifest does not match this extension ID");
-          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "âœ• Forbidden", nativeMessagingDesc, "Access forbidden: Extension ID not authorized");
+          setItemStatus(itemNativeHost, nativeHostResult, "failure", "\u2716 ID Mismatch", nativeHostDesc, "allowed_origins in host manifest does not match this extension ID");
+          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "\u2716 Forbidden", nativeMessagingDesc, "Access forbidden: Extension ID not authorized");
           showRemediation(
-            "Native Host âœ•",
+            "Native Host \u2716",
             `The host manifest does not authorize extension ID "${extId}". Re-run install_host.bat to update the registration with your current extension ID.`,
             "Run install_host.bat to re-register with your extension ID."
           );
         } else {
-          setItemStatus(itemNativeHost, nativeHostResult, "failure", "âœ• Host Error", nativeHostDesc, errMsg);
-          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "âœ• Disconnected", nativeMessagingDesc, "Process exited or failed to communicate");
+          setItemStatus(itemNativeHost, nativeHostResult, "failure", "\u2716 Host Error", nativeHostDesc, errMsg);
+          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "\u2716 Disconnected", nativeMessagingDesc, "Process exited or failed to communicate");
           showRemediation(
-            "Native Host âœ•",
+            "Native Host \u2716",
             `The native host could not be contacted. (Details: ${errMsg})`,
             "Verify PowerShell execution policy or run host\\install_host.bat."
           );
         }
 
         // Windows Theme API cannot be checked if host is disconnected
-        setItemStatus(itemThemeApi, themeApiResult, "failure", "âœ• Unavailable", themeApiDesc, "Requires connected Native Host");
+        setItemStatus(itemThemeApi, themeApiResult, "failure", "\u2716 Unavailable", themeApiDesc, "Requires connected Native Host");
         setItemStatus(itemDeviceMode, deviceModeResult, "pending", "Skipped", deviceModeDesc, "Requires Windows Theme API");
         finishDiagnostics(report, false);
         return;
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
           itemThemeApi,
           themeApiResult,
           "success",
-          "âœ“ Available",
+          "\u2713 Available",
           themeApiDesc,
           `AppsUseLightTheme: ${appsLight} &bull; SystemUsesLightTheme: ${sysLight} (HKCU Personalize OK)`
         );
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
             itemDeviceMode,
             deviceModeResult,
             "success",
-            "âœ“ Enabled",
+            "\u2713 Enabled",
             deviceModeDesc,
             `Chrome matches Windows Theme (${prefersScheme.toUpperCase()}) &bull; Device Mode active`
           );
@@ -298,13 +298,13 @@ document.addEventListener("DOMContentLoaded", () => {
             itemDeviceMode,
             deviceModeResult,
             "failure",
-            "âœ• Needs Device Mode",
+            "\u2716 Needs Device Mode",
             deviceModeDesc,
             `Chrome is currently '${prefersScheme}', while OS theme is '${currentMode}'. Change Chrome mode to 'Device'.`
           );
           report.errors.push(`Chrome Appearance does not match OS theme. Chrome mode must be set to 'Device'.`);
           showRemediation(
-            "Chrome Device Mode âœ•",
+            "Chrome Device Mode \u2716",
             "Chrome's internal appearance is set to a fixed theme rather than 'Device'. To allow the extension to control tabs, toolbar, and omnibox, set Chrome mode to 'Device'.",
             "Open Chrome Appearance Settings and click 'Device'.",
             true
@@ -319,10 +319,10 @@ document.addEventListener("DOMContentLoaded", () => {
         report.themeApi.error = statusResult.error;
         report.errors.push(`Windows Theme API query failed: ${statusResult.error}`);
 
-        setItemStatus(itemThemeApi, themeApiResult, "failure", "âœ• Error", themeApiDesc, statusResult.error || "Failed to query registry");
+        setItemStatus(itemThemeApi, themeApiResult, "failure", "\u2716 Error", themeApiDesc, statusResult.error || "Failed to query registry");
         setItemStatus(itemDeviceMode, deviceModeResult, "pending", "Skipped", deviceModeDesc, "Dependent test skipped");
         showRemediation(
-          "Windows Theme API âœ•",
+          "Windows Theme API \u2716",
           "Could not read Windows Personalize theme registry key. Ensure your Windows account has access to HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize.",
           "Check Windows Registry permissions."
         );
@@ -596,10 +596,10 @@ pause
       "#### Subsystem Checklist:",
       `- Chrome: ${reportStatusSummary(lastDiagnosticReport.chrome)}`,
       `- Extension: ${reportStatusSummary(lastDiagnosticReport.extension)}`,
-      `- Native Host: ${lastDiagnosticReport.nativeHost?.installed ? "âœ“ Installed" : "âœ• Not Installed"} (${lastDiagnosticReport.nativeHost?.error || "OK"})`,
-      `- Native Messaging: ${lastDiagnosticReport.nativeMessaging?.connected ? "âœ“ Connected" : "âœ• Disconnected"} (Latency: ${lastDiagnosticReport.nativeMessaging?.latencyMs || "-"}ms)`,
-      `- Windows Theme API: ${lastDiagnosticReport.themeApi?.available ? "âœ“ Available" : "âœ• Unavailable"} (AppsUseLightTheme: ${lastDiagnosticReport.themeApi?.appsUseLightTheme})`,
-      `- Chrome Device Mode: ${lastDiagnosticReport.deviceMode?.matchesOsTheme ? "âœ“ Matching System" : "âœ• Mismatched"} (Browser scheme: ${lastDiagnosticReport.deviceMode?.browserColorScheme})`,
+      `- Native Host: ${lastDiagnosticReport.nativeHost?.installed ? "\u2713 Installed" : "\u2716 Not Installed"} (${lastDiagnosticReport.nativeHost?.error || "OK"})`,
+      `- Native Messaging: ${lastDiagnosticReport.nativeMessaging?.connected ? "\u2713 Connected" : "\u2716 Disconnected"} (Latency: ${lastDiagnosticReport.nativeMessaging?.latencyMs || "-"}ms)`,
+      `- Windows Theme API: ${lastDiagnosticReport.themeApi?.available ? "\u2713 Available" : "\u2716 Unavailable"} (AppsUseLightTheme: ${lastDiagnosticReport.themeApi?.appsUseLightTheme})`,
+      `- Chrome Device Mode: ${lastDiagnosticReport.deviceMode?.matchesOsTheme ? "\u2713 Matching System" : "\u2716 Mismatched"} (Browser scheme: ${lastDiagnosticReport.deviceMode?.browserColorScheme})`,
       "",
       "#### Raw Telemetry:",
       "```json",
@@ -629,8 +629,8 @@ pause
 
   function reportStatusSummary(obj) {
     if (!obj) return "N/A";
-    if (obj.version) return `âœ“ Detected (v${obj.version})`;
-    return "âœ“ OK";
+    if (obj.version) return `\u2713 Detected (v${obj.version})`;
+    return "\u2713 OK";
   }
 
   // Auto-run diagnostics immediately on page open
