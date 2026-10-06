@@ -41,6 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const remediationMessage = document.getElementById("remediationMessage");
   const remediationTag = document.getElementById("remediationTag");
   const btnReinstallHost = document.getElementById("btnReinstallHost");
+  const onboardingCard = document.getElementById("onboardingCard");
+  const btnDownloadAutoInstaller = document.getElementById("btnDownloadAutoInstaller");
+  const btnOneClickRemediation = document.getElementById("btnOneClickRemediation");
   const btnViewGuide = document.getElementById("btnViewGuide");
   const btnCopyReport = document.getElementById("btnCopyReport");
   const copyReportText = document.getElementById("copyReportText");
@@ -331,14 +334,16 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRunTest.disabled = false;
     btnRunTestText.textContent = "Run Test";
 
-    // Update Overall Badge
+    // Update Overall Badge and Onboarding/Remediation banners
     if (allPass) {
       overallStatusBadge.className = "badge badge-status status-all-pass";
       overallStatusBadge.textContent = "All Subsystems Passed (6/6)";
-      remediationCard.style.display = "none";
+      if (remediationCard) remediationCard.style.display = "none";
+      if (onboardingCard) onboardingCard.style.display = "none";
     } else {
       overallStatusBadge.className = "badge badge-status status-has-fail";
       overallStatusBadge.textContent = "Issue Detected";
+      if (onboardingCard) onboardingCard.style.display = "block";
     }
 
     // Render Logs & Timestamp
@@ -437,10 +442,103 @@ document.addEventListener("DOMContentLoaded", () => {
     runDiagnostics();
   });
 
-  btnReinstallHost.addEventListener("click", () => {
-    // Open guide modal with emphasis on step 2
-    guideModal.style.display = "flex";
-  });
+  // 1-Click Companion Installer Generator
+  const HOST_PS1_BASE64 = "IyBDaHJvbWUgQXBwZWFyYW5jZSBTd2l0Y2hlciAtIE5hdGl2ZSBNZXNzYWdpbmcgSG9zdCAoV2luZG93cykKIyBIYW5kbGVzIEpTT04gbWVzc2FnZXMgdmlhIHN0YW5kYXJkIGlucHV0L291dHB1dCB3aXRoIDQtYnl0ZSBwcmVmaXguCgpbQ29uc29sZV06OklucHV0RW5jb2RpbmcgPSBbU3lzdGVtLlRleHQuRW5jb2RpbmddOjpVVEY4CltDb25zb2xlXTo6T3V0cHV0RW5jb2RpbmcgPSBbU3lzdGVtLlRleHQuRW5jb2RpbmddOjpVVEY4Cgokc3RkaW4gPSBbU3lzdGVtLkNvbnNvbGVdOjpPcGVuU3RhbmRhcmRJbnB1dCgpCiRzdGRvdXQgPSBbU3lzdGVtLkNvbnNvbGVdOjpPcGVuU3RhbmRhcmRPdXRwdXQoKQoKIyBDIyBkZWZpbml0aW9uIGZvciBicm9hZGNhc3RpbmcgV01fU0VUVElOR0NIQU5HRSB0byBlbnN1cmUgaW5zdGFudCBVSSByZWFjdGlvbgpBZGQtVHlwZSAtVHlwZURlZmluaXRpb24gQCcKdXNpbmcgU3lzdGVtOwp1c2luZyBTeXN0ZW0uUnVudGltZS5JbnRlcm9wU2VydmljZXM7CgpwdWJsaWMgY2xhc3MgTmF0aXZlVGhlbWVOb3RpZmllciB7CiAgICBbRGxsSW1wb3J0KCJ1c2VyMzIuZGxsIiwgU2V0TGFzdEVycm9yID0gdHJ1ZSwgQ2hhclNldCA9IENoYXJTZXQuQXV0byldCiAgICBwdWJsaWMgc3RhdGljIGV4dGVybiBJbnRQdHIgU2VuZE1lc3NhZ2VUaW1lb3V0KAogICAgICAgIEludFB0ciBoV25kLAogICAgICAgIHVpbnQgTXNnLAogICAgICAgIFVJbnRQdHIgd1BhcmFtLAogICAgICAgIHN0cmluZyBsUGFyYW0sCiAgICAgICAgdWludCBmdUZsYWdzLAogICAgICAgIHVpbnQgdVRpbWVvdXQsCiAgICAgICAgb3V0IFVJbnRQdHIgbHBkd1Jlc3VsdCk7Cn0KJ0AKCmZ1bmN0aW9uIE5vdGlmeS1UaGVtZUNoYW5nZSB7CiAgICB0cnkgewogICAgICAgICRyZXN1bHQgPSBbVUludFB0cl06Olplcm8KICAgICAgICAjIEhXTkRfQlJPQURDQVNUID0gMHhmZmZmLCBXTV9TRVRUSU5HQ0hBTkdFID0gMHgwMDFBLCBTTVRPX0FCT1JUSUZIVU5HID0gMgogICAgICAgIFt2b2lkXVtOYXRpdmVUaGVtZU5vdGlmaWVyXTo6U2VuZE1lc3NhZ2VUaW1lb3V0KFtJbnRQdHJdMHhmZmZmLCAweDAwMUEsIFtVSW50UHRyXTo6WmVybywgIkltbWVyc2l2ZUNvbG9yU2V0IiwgMiwgMjAwLCBbcmVmXSRyZXN1bHQpCiAgICB9IGNhdGNoIHsKICAgICAgICAjIEZhbGxiYWNrIHdpdGhvdXQgZmFpbGluZwogICAgfQp9CgpmdW5jdGlvbiBTZW5kLU5hdGl2ZVJlc3BvbnNlKFtoYXNodGFibGVdJGRhdGEpIHsKICAgICRqc29uID0gKCRkYXRhIHwgQ29udmVydFRvLUpzb24gLUNvbXByZXNzKQogICAgJGJ5dGVzID0gW1N5c3RlbS5UZXh0LkVuY29kaW5nXTo6VVRGOC5HZXRCeXRlcygkanNvbikKICAgICRsZW5CeXRlcyA9IFtTeXN0ZW0uQml0Q29udmVydGVyXTo6R2V0Qnl0ZXMoW2ludF0kYnl0ZXMuTGVuZ3RoKQoKICAgIFt2b2lkXSRzdGRvdXQuV3JpdGUoJGxlbkJ5dGVzLCAwLCA0KQogICAgW3ZvaWRdJHN0ZG91dC5Xcml0ZSgkYnl0ZXMsIDAsICRieXRlcy5MZW5ndGgpCiAgICBbdm9pZF0kc3Rkb3V0LkZsdXNoKCkKfQoKJHJlZ0tleSA9ICJIS0NVOlxTb2Z0d2FyZVxNaWNyb3NvZnRcV2luZG93c1xDdXJyZW50VmVyc2lvblxUaGVtZXNcUGVyc29uYWxpemUiCgp3aGlsZSAoJHRydWUpIHsKICAgICRsZW5CeXRlcyA9IE5ldy1PYmplY3QgYnl0ZVtdIDQKICAgICRyZWFkID0gJHN0ZGluLlJlYWQoJGxlbkJ5dGVzLCAwLCA0KQogICAgaWYgKCRyZWFkIC1sdCA0KSB7CiAgICAgICAgIyBFbmQgb2Ygc3RyZWFtIC8gQ2hyb21lIGRpc2Nvbm5lY3RlZAogICAgICAgIGJyZWFrCiAgICB9CgogICAgJG1zZ0xlbiA9IFtTeXN0ZW0uQml0Q29udmVydGVyXTo6VG9JbnQzMigkbGVuQnl0ZXMsIDApCiAgICBpZiAoJG1zZ0xlbiAtbGUgMCAtb3IgJG1zZ0xlbiAtZ3QgMTA0ODU3NikgewogICAgICAgICMgSW52YWxpZCBsZW5ndGgKICAgICAgICBicmVhawogICAgfQoKICAgICRidWZmZXIgPSBOZXctT2JqZWN0IGJ5dGVbXSAkbXNnTGVuCiAgICAkdG90YWxSZWFkID0gMAogICAgd2hpbGUgKCR0b3RhbFJlYWQgLWx0ICRtc2dMZW4pIHsKICAgICAgICAkY2h1bmsgPSAkc3RkaW4uUmVhZCgkYnVmZmVyLCAkdG90YWxSZWFkLCAkbXNnTGVuIC0gJHRvdGFsUmVhZCkKICAgICAgICBpZiAoJGNodW5rIC1sZSAwKSB7IGJyZWFrIH0KICAgICAgICAkdG90YWxSZWFkICs9ICRjaHVuawogICAgfQoKICAgIGlmICgkdG90YWxSZWFkIC1sdCAkbXNnTGVuKSB7CiAgICAgICAgYnJlYWsKICAgIH0KCiAgICAkcmF3VGV4dCA9IFtTeXN0ZW0uVGV4dC5FbmNvZGluZ106OlVURjguR2V0U3RyaW5nKCRidWZmZXIsIDAsICR0b3RhbFJlYWQpCiAgICAKICAgIHRyeSB7CiAgICAgICAgJG1zZyA9ICRyYXdUZXh0IHwgQ29udmVydEZyb20tSnNvbgogICAgICAgICRhY3Rpb24gPSAkbXNnLmFjdGlvbgoKICAgICAgICBpZiAoJGFjdGlvbiAtZXEgInBpbmciKSB7CiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJvayIKICAgICAgICAgICAgICAgIHBvbmcgPSAkdHJ1ZQogICAgICAgICAgICAgICAgdmVyc2lvbiA9ICIxLjAuMCIKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBlbHNlaWYgKCRhY3Rpb24gLWVxICJnZXRfc3RhdHVzIikgewogICAgICAgICAgICAkYXBwc0xpZ2h0ID0gMQogICAgICAgICAgICAkc3lzTGlnaHQgPSAxCiAgICAgICAgICAgIHRyeSB7CiAgICAgICAgICAgICAgICAkcHJvcCA9IEdldC1JdGVtUHJvcGVydHkgLVBhdGggJHJlZ0tleSAtRXJyb3JBY3Rpb24gU2lsZW50bHlDb250aW51ZQogICAgICAgICAgICAgICAgaWYgKCRudWxsIC1uZSAkcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSkgeyAkYXBwc0xpZ2h0ID0gW2ludF0kcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSB9CiAgICAgICAgICAgICAgICBpZiAoJG51bGwgLW5lICRwcm9wLlN5c3RlbVVzZXNMaWdodFRoZW1lKSB7ICRzeXNMaWdodCA9IFtpbnRdJHByb3AuU3lzdGVtVXNlc0xpZ2h0VGhlbWUgfQogICAgICAgICAgICB9IGNhdGNoIHt9CgogICAgICAgICAgICAkbW9kZSA9IGlmICgkYXBwc0xpZ2h0IC1lcSAxKSB7ICJsaWdodCIgfSBlbHNlIHsgImRhcmsiIH0KICAgICAgICAgICAgU2VuZC1OYXRpdmVSZXNwb25zZSBAewogICAgICAgICAgICAgICAgc3RhdHVzID0gIm9rIgogICAgICAgICAgICAgICAgbW9kZSA9ICRtb2RlCiAgICAgICAgICAgICAgICBhcHBzVXNlTGlnaHRUaGVtZSA9ICRhcHBzTGlnaHQKICAgICAgICAgICAgICAgIHN5c3RlbVVzZXNMaWdodFRoZW1lID0gJHN5c0xpZ2h0CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZWxzZWlmICgkYWN0aW9uIC1lcSAic2V0X3RoZW1lIikgewogICAgICAgICAgICAkdGFyZ2V0TW9kZSA9ICRtc2cubW9kZSAjICJsaWdodCIsICJkYXJrIiwgb3IgInRvZ2dsZSIKICAgICAgICAgICAgJGN1cnJlbnRBcHBzID0gMQogICAgICAgICAgICB0cnkgewogICAgICAgICAgICAgICAgJHByb3AgPSBHZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUKICAgICAgICAgICAgICAgIGlmICgkbnVsbCAtbmUgJHByb3AuQXBwc1VzZUxpZ2h0VGhlbWUpIHsgJGN1cnJlbnRBcHBzID0gW2ludF0kcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSB9CiAgICAgICAgICAgIH0gY2F0Y2gge30KCiAgICAgICAgICAgICRuZXdMaWdodFZhbCA9IDEKICAgICAgICAgICAgaWYgKCR0YXJnZXRNb2RlIC1lcSAidG9nZ2xlIikgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gaWYgKCRjdXJyZW50QXBwcyAtZXEgMSkgeyAwIH0gZWxzZSB7IDEgfQogICAgICAgICAgICB9IGVsc2VpZiAoJHRhcmdldE1vZGUgLWVxICJkYXJrIikgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gMAogICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gMQogICAgICAgICAgICB9CgogICAgICAgICAgICAjIFNldCBBcHBzIHRoZW1lICh0aGlzIGNvbnRyb2xzIENocm9tZSBVSSB0YWJzLCB0b29sYmFyLCBvbW5pYm94KQogICAgICAgICAgICBTZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLU5hbWUgIkFwcHNVc2VMaWdodFRoZW1lIiAtVmFsdWUgJG5ld0xpZ2h0VmFsIC1UeXBlIERXb3JkIC1Gb3JjZQogICAgICAgICAgICAKICAgICAgICAgICAgIyBPcHRpb25hbGx5IHN5bmMgU3lzdGVtIHRoZW1lIGlmIHJlcXVlc3RlZCAoZGVmYXVsdCB0cnVlKQogICAgICAgICAgICBpZiAoJG51bGwgLWVxICRtc2cuc3luY1N5c3RlbSAtb3IgJG1zZy5zeW5jU3lzdGVtIC1lcSAkdHJ1ZSkgewogICAgICAgICAgICAgICAgU2V0LUl0ZW1Qcm9wZXJ0eSAtUGF0aCAkcmVnS2V5IC1OYW1lICJTeXN0ZW1Vc2VzTGlnaHRUaGVtZSIgLVZhbHVlICRuZXdMaWdodFZhbCAtVHlwZSBEV29yZCAtRm9yY2UKICAgICAgICAgICAgfQoKICAgICAgICAgICAgIyBOb3RpZnkgZGVza3RvcCBhcHBsaWNhdGlvbnMgdG8gaW1tZWRpYXRlbHkgcmVwYWludAogICAgICAgICAgICBOb3RpZnktVGhlbWVDaGFuZ2UKCiAgICAgICAgICAgICRmaW5hbE1vZGUgPSBpZiAoJG5ld0xpZ2h0VmFsIC1lcSAxKSB7ICJsaWdodCIgfSBlbHNlIHsgImRhcmsiIH0KICAgICAgICAgICAgJGN1cnJTeXNMaWdodCA9IDEKICAgICAgICAgICAgdHJ5IHsKICAgICAgICAgICAgICAgICRjdXJyU3lzTGlnaHQgPSBbaW50XShHZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUpLlN5c3RlbVVzZXNMaWdodFRoZW1lCiAgICAgICAgICAgIH0gY2F0Y2gge30KCiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJvayIKICAgICAgICAgICAgICAgIG1vZGUgPSAkZmluYWxNb2RlCiAgICAgICAgICAgICAgICBhcHBzVXNlTGlnaHRUaGVtZSA9ICRuZXdMaWdodFZhbAogICAgICAgICAgICAgICAgc3lzdGVtVXNlc0xpZ2h0VGhlbWUgPSAkY3VyclN5c0xpZ2h0CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZWxzZSB7CiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJlcnJvciIKICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSAiVW5rbm93biBhY3Rpb246ICRhY3Rpb24iCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9IGNhdGNoIHsKICAgICAgICBTZW5kLU5hdGl2ZVJlc3BvbnNlIEB7CiAgICAgICAgICAgIHN0YXR1cyA9ICJlcnJvciIKICAgICAgICAgICAgbWVzc2FnZSA9ICRfLkV4Y2VwdGlvbi5NZXNzYWdlCiAgICAgICAgfQogICAgfQp9Cg==";
+
+  function downloadCompanionInstaller() {
+    const extId = chrome.runtime.id || "pmemlchnjmekopkkmjbbhfcfbmpbkclo";
+    const batContent = `@echo off
+setlocal enabledelayedexpansion
+title Chrome Appearance Switcher - 1-Click Host Setup
+color 0B
+echo ========================================================
+echo   Chrome Appearance Switcher - 1-Click Host Installer
+echo ========================================================
+echo.
+
+set "INSTALL_DIR=%USERPROFILE%\\.chrome-appearance-switcher"
+if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
+
+echo [1/3] Setting up companion files in:
+echo       %INSTALL_DIR%
+echo.
+
+:: 1. Decode host.ps1 from embedded Base64 payload
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$b = '${HOST_PS1_BASE64}'; [System.IO.File]::WriteAllBytes('%INSTALL_DIR%\\host.ps1', [System.Convert]::FromBase64String($b))"
+
+:: 2. Create host_launcher.bat
+(
+  echo @echo off
+  echo powershell.exe -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "%%~dp0host.ps1"
+) > "%INSTALL_DIR%\\host_launcher.bat"
+
+:: 3. Create com.appearance.switcher.json
+set "LAUNCHER_FILE=%INSTALL_DIR%\\host_launcher.bat"
+set "JSON_PATH=!LAUNCHER_FILE:\\=\\\\!"
+
+(
+  echo {
+  echo   "name": "com.appearance.switcher",
+  echo   "description": "Chrome Appearance Switcher Native Host",
+  echo   "path": "!JSON_PATH!",
+  echo   "type": "stdio",
+  echo   "allowed_origins": [
+  echo     "chrome-extension://pmemlchnjmekopkkmjbbhfcfbmpbkclo/",
+  echo     "chrome-extension://${extId}/"
+  echo   ]
+  echo }
+) > "%INSTALL_DIR%\\com.appearance.switcher.json"
+
+echo [2/3] Registering in Windows Registry for Google Chrome...
+REG ADD "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts\\com.appearance.switcher" /ve /t REG_SZ /d "%INSTALL_DIR%\\com.appearance.switcher.json" /f >nul
+if %ERRORLEVEL% NEQ 0 (
+  echo [ERROR] Failed to write registry key!
+  pause
+  exit /b 1
+)
+
+echo.
+echo [3/3] Verification:
+REG QUERY "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts\\com.appearance.switcher"
+echo.
+echo ========================================================
+echo  [SUCCESS] Native Host registered successfully!
+echo  Switch back to Chrome and click [ Run Test ]!
+echo ========================================================
+echo.
+pause
+`;
+
+    const blob = new Blob([batContent], { type: "application/x-bat" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "install_companion.bat";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    alert("Downloaded install_companion.bat!\n\nClick it once in your browser download bar to complete setup in 2 seconds.");
+  }
+
+  if (btnDownloadAutoInstaller) {
+    btnDownloadAutoInstaller.addEventListener("click", () => {
+      downloadCompanionInstaller();
+    });
+  }
+
+  if (btnOneClickRemediation) {
+    btnOneClickRemediation.addEventListener("click", () => {
+      downloadCompanionInstaller();
+    });
+  }
+
+  if (btnReinstallHost) {
+    btnReinstallHost.addEventListener("click", () => {
+      downloadCompanionInstaller();
+    });
+  }
 
   btnViewGuide.addEventListener("click", () => {
     guideModal.style.display = "flex";
@@ -531,4 +629,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Auto-run diagnostics immediately on page open
   runDiagnostics();
+
+  // If launched with ?autoDownload=true, trigger 1-click installer download immediately
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("autoDownload") === "true") {
+    setTimeout(() => {
+      downloadCompanionInstaller();
+    }, 400);
+  }
 });

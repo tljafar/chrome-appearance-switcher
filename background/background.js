@@ -82,8 +82,12 @@ function applyNativeTheme(targetMode) {
 }
 
 // Handle extension lifecycle & messages
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
   init();
+  // Automatically open onboarding diagnostics page on first install
+  if (details && details.reason === "install") {
+    chrome.tabs.create({ url: "diagnostics/diagnostics.html?onboarding=true" });
+  }
 });
 
 chrome.runtime.onStartup.addListener(() => {

@@ -85,6 +85,9 @@ Copy-Item (Join-Path $rootDir "host\uninstall_host.bat") $hostStagingDir -Force
 Copy-Item (Join-Path $rootDir "host\host_launcher.bat") $hostStagingDir -Force
 Copy-Item (Join-Path $rootDir "host\host.ps1") $hostStagingDir -Force
 Copy-Item (Join-Path $rootDir "host\com.appearance.switcher.json") $hostStagingDir -Force
+if (Test-Path (Join-Path $rootDir "host\README.md")) {
+    Copy-Item (Join-Path $rootDir "host\README.md") $hostStagingDir -Force
+}
 
 # Create Client Quick-Start Guide inside the package
 $clientGuideContent = @"

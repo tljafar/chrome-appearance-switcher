@@ -28,6 +28,53 @@
       </div>
     </header>
 
+    <!-- Onboarding Welcome Banner (Shown on first install or when companion needed) -->
+    <section class="diag-card onboarding-card" id="onboardingCard" style="display: none;">
+      <div class="onboarding-header">
+        <div class="onboarding-badge">👋 Welcome! 30-Second Setup</div>
+        <h2>Connect Your Windows Theme Companion</h2>
+        <p>To switch Chrome's native window frame, tab strip, toolbar, and omnibox, Google Chrome requires a local Windows bridge. Choose your preferred installation option below:</p>
+      </div>
+
+      <div class="setup-options-grid">
+        <!-- Option 1: 1-Click Automated Setup -->
+        <div class="setup-option-card primary-option">
+          <div class="option-header-badge">⚡ Option 1: Recommended (Fastest)</div>
+          <h3>1-Click Auto Installer</h3>
+          <p>Generates and downloads a self-contained Windows setup file configured for your exact extension ID. No ZIP extraction needed.</p>
+          <button class="btn btn-primary btn-auto-install" id="btnDownloadAutoInstaller">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span>Download 1-Click Setup (.bat)</span>
+          </button>
+          <div class="step-guide-inline">
+            <span>1. Click to download</span> &rarr;
+            <span>2. Click file in Chrome download bar</span> &rarr;
+            <span>3. Click <b>Run Test</b> below</span>
+          </div>
+        </div>
+
+        <!-- Option 2: Manual Installation -->
+        <div class="setup-option-card secondary-option">
+          <div class="option-header-badge alt-badge">🛠️ Option 2: Advanced / Fallback</div>
+          <h3>Manual ZIP Installation</h3>
+          <p>Download the standalone release archive from GitHub, inspect the source files, and run the batch installer manually.</p>
+          <a class="btn btn-secondary" id="btnDownloadManualZip" href="https://github.com/tljafar/chrome-appearance-switcher/releases/latest" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Download Standalone ZIP</span>
+          </a>
+          <div class="step-guide-inline">
+            <span>Extract ZIP &rarr; Run <code>install_host.bat</code></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Main Diagnostic Suite Card -->
     <main class="diag-card suite-card">
       <div class="suite-header">
@@ -165,14 +212,21 @@
       </p>
 
       <div class="action-buttons-row">
-        <button class="btn btn-accent" id="btnReinstallHost">
+        <button class="btn btn-primary" id="btnOneClickRemediation">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span>⚡ Option 1: 1-Click Auto Setup (.bat)</span>
+        </button>
+
+        <a class="btn btn-secondary" id="btnManualZipRemediation" href="https://github.com/tljafar/chrome-appearance-switcher/releases/latest" target="_blank" rel="noreferrer">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          <span>Reinstall Native Host</span>
-        </button>
+          <span>Option 2: Manual ZIP (GitHub)</span>
+        </a>
 
         <button class="btn btn-secondary" id="btnViewGuide">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
@@ -180,7 +234,7 @@
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
             <line x1="12" y1="17" x2="12.01" y2="17"></line>
           </svg>
-          <span>View Installation Guide</span>
+          <span>Installation Guide</span>
         </button>
 
         <button class="btn btn-secondary" id="btnCopyReport">
@@ -288,16 +342,26 @@
         <div class="guide-step">
           <div class="step-num">1</div>
           <div class="step-content">
-            <h4>Download or Locate the Host Folder</h4>
-            <p>If you downloaded the extension package, open the <code>host\</code> folder containing <code>install_host.bat</code>, <code>host_launcher.bat</code>, and <code>host.ps1</code>.</p>
+            <h4>Download the Native Companion ZIP</h4>
+            <p>Download the official lightweight Windows companion package for your operating system:</p>
+            <div style="margin-top: 8px;">
+              <a href="https://github.com/tljafar/chrome-appearance-switcher/releases/latest" target="_blank" rel="noreferrer" class="btn btn-primary" style="display: inline-flex; text-decoration: none; font-size: 13px; padding: 7px 14px;">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Download native-companion-installer.zip</span>
+              </a>
+            </div>
           </div>
         </div>
 
         <div class="guide-step">
           <div class="step-num">2</div>
           <div class="step-content">
-            <h4>Run the Installer</h4>
-            <p>Double-click <code>install_host.bat</code> (or right-click and choose <i>Run as Administrator</i> if your user account requires elevated registry permissions).</p>
+            <h4>Extract ZIP & Run Installer</h4>
+            <p>Right-click the downloaded ZIP file, select <b>Extract All</b>, open the extracted folder, and double-click <code>install_host.bat</code>.</p>
             <div class="guide-callout">
               <b>What it does:</b> Registers <code>com.appearance.switcher</code> under <code>HKCU\Software\Google\Chrome\NativeMessagingHosts</code> pointing to <code>host_launcher.bat</code>.
             </div>

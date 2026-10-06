@@ -136,18 +136,19 @@
           <span class="os-badge">Windows 10 / 11</span>
         </div>
         <p class="banner-text">Chrome extensions require a native bridge to alter the OS-drawn browser frame, tabs & toolbar.</p>
-        <button class="download-host-btn" id="btnDownloadHost">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          <span>Download Native Companion</span>
-        </button>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin: 10px 0;">
+          <button class="download-host-btn" id="btnPopupAutoInstall" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border: none; font-weight: 600;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span>⚡ Option 1: 1-Click Setup (.bat)</span>
+          </button>
+          <button class="download-host-btn" id="btnDownloadHost" style="background: rgba(125, 125, 125, 0.1); color: var(--text-main); border: 1px solid var(--border-card);">
+            <span>🛠️ Option 2: Manual ZIP (GitHub)</span>
+          </button>
+        </div>
         <div class="mini-instructions">
-          <span>1. Extract ZIP</span> &bull;
-          <span>2. Run <code>install_host.bat</code></span> &bull;
-          <span>3. <a href="#" id="linkBannerDiagnostics" style="color: inherit; font-weight: 600; text-decoration: underline;">Open Diagnostics</a></span>
+          <span>Run installer &bull; <a href="#" id="linkBannerDiagnostics" style="color: inherit; font-weight: 600; text-decoration: underline;">Open Diagnostics</a></span>
         </div>
       </div>
     </section>

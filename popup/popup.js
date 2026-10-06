@@ -150,6 +150,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const btnPopupAutoInstall = document.getElementById("btnPopupAutoInstall");
+  if (btnPopupAutoInstall) {
+    btnPopupAutoInstall.addEventListener("click", () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("diagnostics/diagnostics.html?onboarding=true&autoDownload=true") });
+    });
+  }
+
   const btnDownloadHost = document.getElementById("btnDownloadHost");
   if (btnDownloadHost) {
     btnDownloadHost.addEventListener("click", () => {

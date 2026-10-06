@@ -34,9 +34,12 @@ echo [1/3] Generating host configuration with absolute path...
   echo   "path": "!JSON_PATH!",
   echo   "type": "stdio",
   echo   "allowed_origins": [
-  echo     "chrome-extension://pmemlchnjmekopkkmjbbhfcfbmpbkclo/"
+  echo     "chrome-extension://pmemlchnjmekopkkmjbbhfcfbmpbkclo/",
+  echo     "chrome-extension://giipkopljmnjmlkecknneemdkobcapnk/"
   if not "!STORE_ID!"=="" (
-    echo     ,"chrome-extension://!STORE_ID!/"
+    if not "!STORE_ID!"=="giipkopljmnjmlkecknneemdkobcapnk" (
+      echo     ,"chrome-extension://!STORE_ID!/"
+    )
   )
   echo   ]
   echo }

@@ -87,16 +87,22 @@ https://yourdomain.com/downloads/native-companion-installer.zip
 
 ---
 
-## 🔗 Step 4: Link Chrome Web Store Extension ID
+---
 
-When Google approves your extension on the Web Store:
-1. Google assigns an official 32-character extension ID (e.g. `abcdefghijklmnopabcdefghijklmnop`).
-2. Update `allowed_origins` in `host/com.appearance.switcher.json`:
-   ```json
-   "allowed_origins": [
-     "chrome-extension://pmemlchnjmekopkkmjbbhfcfbmpbkclo/",
-     "chrome-extension://YOUR_STORE_EXTENSION_ID/"
-   ]
-   ```
-3. Re-run `build_release.bat`.
-4. Anyone who installs your extension from the Chrome Web Store and runs `install_host.bat` will connect with zero configuration!
+## 🔗 Live Chrome Web Store Release
+
+The extension is officially published on the Google Chrome Web Store!
+
+* **Web Store Listing**: [Chrome Appearance Switcher on Chrome Web Store](https://chromewebstore.google.com/detail/chrome-appearance-switche/giipkopljmnjmlkecknneemdkobcapnk)
+* **Official Extension ID**: `giipkopljmnjmlkecknneemdkobcapnk`
+
+`host/com.appearance.switcher.json` and `host/install_host.bat` are already preconfigured with:
+```json
+"allowed_origins": [
+  "chrome-extension://pmemlchnjmekopkkmjbbhfcfbmpbkclo/",
+  "chrome-extension://giipkopljmnjmlkecknneemdkobcapnk/"
+]
+```
+
+Anyone installing the extension directly from the Chrome Web Store and running the 1-click installer or manual `install_host.bat` connects out-of-the-box with zero configuration required!
+
