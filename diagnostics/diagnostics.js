@@ -1,4 +1,4 @@
-// System Diagnostics Controller - Chrome Appearance Switcher
+﻿// System Diagnostics Controller - Chrome Appearance Switcher
 // Pure Vanilla JS, Manifest V3 CSP Compliant
 
 const NATIVE_HOST = "com.appearance.switcher";
@@ -34,6 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnRunTestText = document.getElementById("btnRunTestText");
   const overallStatusBadge = document.getElementById("overallStatusBadge");
   const extVersionBadge = document.getElementById("extVersionBadge");
+  if (extVersionBadge && typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest) {
+    const manifest = chrome.runtime.getManifest();
+    if (manifest && manifest.version) {
+      extVersionBadge.textContent = `Extension v${manifest.version}`;
+    }
+  }
 
   // Remediation Card
   const remediationCard = document.getElementById("remediationCard");
@@ -143,11 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       if (chromeMatch && isWindows) {
-        setItemStatus(itemChrome, chromeResult, "success", "✓ Detected", chromeDesc, `Google Chrome v${chromeVer} on Windows (x64)`);
+        setItemStatus(itemChrome, chromeResult, "success", "âœ“ Detected", chromeDesc, `Google Chrome v${chromeVer} on Windows (x64)`);
       } else if (chromeMatch) {
-        setItemStatus(itemChrome, chromeResult, "success", "✓ Detected", chromeDesc, `Google Chrome v${chromeVer} (${navigator.platform})`);
+        setItemStatus(itemChrome, chromeResult, "success", "âœ“ Detected", chromeDesc, `Google Chrome v${chromeVer} (${navigator.platform})`);
       } else {
-        setItemStatus(itemChrome, chromeResult, "failure", "✕ Warning", chromeDesc, "Running on unsupported browser environment");
+        setItemStatus(itemChrome, chromeResult, "failure", "âœ• Warning", chromeDesc, "Running on unsupported browser environment");
         report.errors.push("Non-Chrome browser detected.");
       }
 
@@ -165,9 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       if (extId && manifest.manifest_version === 3) {
-        setItemStatus(itemExtension, extensionResult, "success", "✓ Running", extensionDesc, `Manifest V3 &bull; ID: ${extId.substring(0, 16)}...`);
+        setItemStatus(itemExtension, extensionResult, "success", "âœ“ Running", extensionDesc, `Manifest V3 &bull; ID: ${extId.substring(0, 16)}...`);
       } else {
-        setItemStatus(itemExtension, extensionResult, "failure", "✕ Error", extensionDesc, "Extension runtime invalid or missing permissions");
+        setItemStatus(itemExtension, extensionResult, "failure", "âœ• Error", extensionDesc, "Extension runtime invalid or missing permissions");
         report.errors.push("Extension runtime invalid.");
       }
 
@@ -185,12 +191,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (pingResult.ok && pingResult.response) {
         // Native Host is Installed and reachable
         report.nativeHost.installed = true;
-        report.nativeHost.version = pingResult.response.version || "1.0.0";
+        report.nativeHost.version = pingResult.response.version || "1.0.1";
         report.nativeMessaging.connected = true;
         report.nativeMessaging.response = pingResult.response;
 
-        setItemStatus(itemNativeHost, nativeHostResult, "success", "✓ Installed", nativeHostDesc, "Host registered in HKCU NativeMessagingHosts");
-        setItemStatus(itemNativeMessaging, nativeMessagingResult, "success", "✓ Connected", nativeMessagingDesc, `IPC Ping roundtrip OK (${latencyMs}ms latency)`);
+        setItemStatus(itemNativeHost, nativeHostResult, "success", "âœ“ Installed", nativeHostDesc, "Host registered in HKCU NativeMessagingHosts");
+        setItemStatus(itemNativeMessaging, nativeMessagingResult, "success", "âœ“ Connected", nativeMessagingDesc, `IPC Ping roundtrip OK (${latencyMs}ms latency)`);
       } else {
         // Native Host connection failed
         report.nativeHost.installed = false;
@@ -201,33 +207,33 @@ document.addEventListener("DOMContentLoaded", () => {
         report.errors.push(`Native Host connection failed: ${errMsg}`);
 
         if (errMsg.includes("Specified native messaging host not found")) {
-          setItemStatus(itemNativeHost, nativeHostResult, "failure", "✕ Not Registered", nativeHostDesc, "Registry key HKCU\\...\\com.appearance.switcher missing");
-          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "✕ Disconnected", nativeMessagingDesc, "Cannot connect: Host is not registered");
+          setItemStatus(itemNativeHost, nativeHostResult, "failure", "âœ• Not Registered", nativeHostDesc, "Registry key HKCU\\...\\com.appearance.switcher missing");
+          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "âœ• Disconnected", nativeMessagingDesc, "Cannot connect: Host is not registered");
           showRemediation(
-            "Native Host ✕",
+            "Native Host âœ•",
             "The native host could not be contacted because it is not registered in the Windows registry. Chrome extensions cannot alter the OS browser frame without this companion.",
             "Run install_host.bat to register the companion host in your registry."
           );
         } else if (errMsg.includes("Access to the specified native messaging host is forbidden")) {
-          setItemStatus(itemNativeHost, nativeHostResult, "failure", "✕ ID Mismatch", nativeHostDesc, "allowed_origins in host manifest does not match this extension ID");
-          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "✕ Forbidden", nativeMessagingDesc, "Access forbidden: Extension ID not authorized");
+          setItemStatus(itemNativeHost, nativeHostResult, "failure", "âœ• ID Mismatch", nativeHostDesc, "allowed_origins in host manifest does not match this extension ID");
+          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "âœ• Forbidden", nativeMessagingDesc, "Access forbidden: Extension ID not authorized");
           showRemediation(
-            "Native Host ✕",
+            "Native Host âœ•",
             `The host manifest does not authorize extension ID "${extId}". Re-run install_host.bat to update the registration with your current extension ID.`,
             "Run install_host.bat to re-register with your extension ID."
           );
         } else {
-          setItemStatus(itemNativeHost, nativeHostResult, "failure", "✕ Host Error", nativeHostDesc, errMsg);
-          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "✕ Disconnected", nativeMessagingDesc, "Process exited or failed to communicate");
+          setItemStatus(itemNativeHost, nativeHostResult, "failure", "âœ• Host Error", nativeHostDesc, errMsg);
+          setItemStatus(itemNativeMessaging, nativeMessagingResult, "failure", "âœ• Disconnected", nativeMessagingDesc, "Process exited or failed to communicate");
           showRemediation(
-            "Native Host ✕",
+            "Native Host âœ•",
             `The native host could not be contacted. (Details: ${errMsg})`,
             "Verify PowerShell execution policy or run host\\install_host.bat."
           );
         }
 
         // Windows Theme API cannot be checked if host is disconnected
-        setItemStatus(itemThemeApi, themeApiResult, "failure", "✕ Unavailable", themeApiDesc, "Requires connected Native Host");
+        setItemStatus(itemThemeApi, themeApiResult, "failure", "âœ• Unavailable", themeApiDesc, "Requires connected Native Host");
         setItemStatus(itemDeviceMode, deviceModeResult, "pending", "Skipped", deviceModeDesc, "Requires Windows Theme API");
         finishDiagnostics(report, false);
         return;
@@ -257,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
           itemThemeApi,
           themeApiResult,
           "success",
-          "✓ Available",
+          "âœ“ Available",
           themeApiDesc,
           `AppsUseLightTheme: ${appsLight} &bull; SystemUsesLightTheme: ${sysLight} (HKCU Personalize OK)`
         );
@@ -281,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
             itemDeviceMode,
             deviceModeResult,
             "success",
-            "✓ Enabled",
+            "âœ“ Enabled",
             deviceModeDesc,
             `Chrome matches Windows Theme (${prefersScheme.toUpperCase()}) &bull; Device Mode active`
           );
@@ -292,13 +298,13 @@ document.addEventListener("DOMContentLoaded", () => {
             itemDeviceMode,
             deviceModeResult,
             "failure",
-            "✕ Needs Device Mode",
+            "âœ• Needs Device Mode",
             deviceModeDesc,
             `Chrome is currently '${prefersScheme}', while OS theme is '${currentMode}'. Change Chrome mode to 'Device'.`
           );
           report.errors.push(`Chrome Appearance does not match OS theme. Chrome mode must be set to 'Device'.`);
           showRemediation(
-            "Chrome Device Mode ✕",
+            "Chrome Device Mode âœ•",
             "Chrome's internal appearance is set to a fixed theme rather than 'Device'. To allow the extension to control tabs, toolbar, and omnibox, set Chrome mode to 'Device'.",
             "Open Chrome Appearance Settings and click 'Device'.",
             true
@@ -313,10 +319,10 @@ document.addEventListener("DOMContentLoaded", () => {
         report.themeApi.error = statusResult.error;
         report.errors.push(`Windows Theme API query failed: ${statusResult.error}`);
 
-        setItemStatus(itemThemeApi, themeApiResult, "failure", "✕ Error", themeApiDesc, statusResult.error || "Failed to query registry");
+        setItemStatus(itemThemeApi, themeApiResult, "failure", "âœ• Error", themeApiDesc, statusResult.error || "Failed to query registry");
         setItemStatus(itemDeviceMode, deviceModeResult, "pending", "Skipped", deviceModeDesc, "Dependent test skipped");
         showRemediation(
-          "Windows Theme API ✕",
+          "Windows Theme API âœ•",
           "Could not read Windows Personalize theme registry key. Ensure your Windows account has access to HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize.",
           "Check Windows Registry permissions."
         );
@@ -410,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnTestLight.textContent = "Switching...";
     const res = await setNativeTheme("light");
     btnTestLight.disabled = false;
-    btnTestLight.textContent = "☀️ Test Light Mode";
+    btnTestLight.textContent = "â˜€ï¸ Test Light Mode";
     if (res.ok) {
       telemetryApps.textContent = "1 (Light)";
       telemetrySys.textContent = "1 (Light)";
@@ -426,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnTestDark.textContent = "Switching...";
     const res = await setNativeTheme("dark");
     btnTestDark.disabled = false;
-    btnTestDark.textContent = "🌙 Test Dark Mode";
+    btnTestDark.textContent = "ðŸŒ™ Test Dark Mode";
     if (res.ok) {
       telemetryApps.textContent = "0 (Dark)";
       telemetrySys.textContent = "0 (Dark)";
@@ -443,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 1-Click Companion Installer Generator
-  const HOST_PS1_BASE64 = "IyBDaHJvbWUgQXBwZWFyYW5jZSBTd2l0Y2hlciAtIE5hdGl2ZSBNZXNzYWdpbmcgSG9zdCAoV2luZG93cykKIyBIYW5kbGVzIEpTT04gbWVzc2FnZXMgdmlhIHN0YW5kYXJkIGlucHV0L291dHB1dCB3aXRoIDQtYnl0ZSBwcmVmaXguCgpbQ29uc29sZV06OklucHV0RW5jb2RpbmcgPSBbU3lzdGVtLlRleHQuRW5jb2RpbmddOjpVVEY4CltDb25zb2xlXTo6T3V0cHV0RW5jb2RpbmcgPSBbU3lzdGVtLlRleHQuRW5jb2RpbmddOjpVVEY4Cgokc3RkaW4gPSBbU3lzdGVtLkNvbnNvbGVdOjpPcGVuU3RhbmRhcmRJbnB1dCgpCiRzdGRvdXQgPSBbU3lzdGVtLkNvbnNvbGVdOjpPcGVuU3RhbmRhcmRPdXRwdXQoKQoKIyBDIyBkZWZpbml0aW9uIGZvciBicm9hZGNhc3RpbmcgV01fU0VUVElOR0NIQU5HRSB0byBlbnN1cmUgaW5zdGFudCBVSSByZWFjdGlvbgpBZGQtVHlwZSAtVHlwZURlZmluaXRpb24gQCcKdXNpbmcgU3lzdGVtOwp1c2luZyBTeXN0ZW0uUnVudGltZS5JbnRlcm9wU2VydmljZXM7CgpwdWJsaWMgY2xhc3MgTmF0aXZlVGhlbWVOb3RpZmllciB7CiAgICBbRGxsSW1wb3J0KCJ1c2VyMzIuZGxsIiwgU2V0TGFzdEVycm9yID0gdHJ1ZSwgQ2hhclNldCA9IENoYXJTZXQuQXV0byldCiAgICBwdWJsaWMgc3RhdGljIGV4dGVybiBJbnRQdHIgU2VuZE1lc3NhZ2VUaW1lb3V0KAogICAgICAgIEludFB0ciBoV25kLAogICAgICAgIHVpbnQgTXNnLAogICAgICAgIFVJbnRQdHIgd1BhcmFtLAogICAgICAgIHN0cmluZyBsUGFyYW0sCiAgICAgICAgdWludCBmdUZsYWdzLAogICAgICAgIHVpbnQgdVRpbWVvdXQsCiAgICAgICAgb3V0IFVJbnRQdHIgbHBkd1Jlc3VsdCk7Cn0KJ0AKCmZ1bmN0aW9uIE5vdGlmeS1UaGVtZUNoYW5nZSB7CiAgICB0cnkgewogICAgICAgICRyZXN1bHQgPSBbVUludFB0cl06Olplcm8KICAgICAgICAjIEhXTkRfQlJPQURDQVNUID0gMHhmZmZmLCBXTV9TRVRUSU5HQ0hBTkdFID0gMHgwMDFBLCBTTVRPX0FCT1JUSUZIVU5HID0gMgogICAgICAgIFt2b2lkXVtOYXRpdmVUaGVtZU5vdGlmaWVyXTo6U2VuZE1lc3NhZ2VUaW1lb3V0KFtJbnRQdHJdMHhmZmZmLCAweDAwMUEsIFtVSW50UHRyXTo6WmVybywgIkltbWVyc2l2ZUNvbG9yU2V0IiwgMiwgMjAwLCBbcmVmXSRyZXN1bHQpCiAgICB9IGNhdGNoIHsKICAgICAgICAjIEZhbGxiYWNrIHdpdGhvdXQgZmFpbGluZwogICAgfQp9CgpmdW5jdGlvbiBTZW5kLU5hdGl2ZVJlc3BvbnNlKFtoYXNodGFibGVdJGRhdGEpIHsKICAgICRqc29uID0gKCRkYXRhIHwgQ29udmVydFRvLUpzb24gLUNvbXByZXNzKQogICAgJGJ5dGVzID0gW1N5c3RlbS5UZXh0LkVuY29kaW5nXTo6VVRGOC5HZXRCeXRlcygkanNvbikKICAgICRsZW5CeXRlcyA9IFtTeXN0ZW0uQml0Q29udmVydGVyXTo6R2V0Qnl0ZXMoW2ludF0kYnl0ZXMuTGVuZ3RoKQoKICAgIFt2b2lkXSRzdGRvdXQuV3JpdGUoJGxlbkJ5dGVzLCAwLCA0KQogICAgW3ZvaWRdJHN0ZG91dC5Xcml0ZSgkYnl0ZXMsIDAsICRieXRlcy5MZW5ndGgpCiAgICBbdm9pZF0kc3Rkb3V0LkZsdXNoKCkKfQoKJHJlZ0tleSA9ICJIS0NVOlxTb2Z0d2FyZVxNaWNyb3NvZnRcV2luZG93c1xDdXJyZW50VmVyc2lvblxUaGVtZXNcUGVyc29uYWxpemUiCgp3aGlsZSAoJHRydWUpIHsKICAgICRsZW5CeXRlcyA9IE5ldy1PYmplY3QgYnl0ZVtdIDQKICAgICRyZWFkID0gJHN0ZGluLlJlYWQoJGxlbkJ5dGVzLCAwLCA0KQogICAgaWYgKCRyZWFkIC1sdCA0KSB7CiAgICAgICAgIyBFbmQgb2Ygc3RyZWFtIC8gQ2hyb21lIGRpc2Nvbm5lY3RlZAogICAgICAgIGJyZWFrCiAgICB9CgogICAgJG1zZ0xlbiA9IFtTeXN0ZW0uQml0Q29udmVydGVyXTo6VG9JbnQzMigkbGVuQnl0ZXMsIDApCiAgICBpZiAoJG1zZ0xlbiAtbGUgMCAtb3IgJG1zZ0xlbiAtZ3QgMTA0ODU3NikgewogICAgICAgICMgSW52YWxpZCBsZW5ndGgKICAgICAgICBicmVhawogICAgfQoKICAgICRidWZmZXIgPSBOZXctT2JqZWN0IGJ5dGVbXSAkbXNnTGVuCiAgICAkdG90YWxSZWFkID0gMAogICAgd2hpbGUgKCR0b3RhbFJlYWQgLWx0ICRtc2dMZW4pIHsKICAgICAgICAkY2h1bmsgPSAkc3RkaW4uUmVhZCgkYnVmZmVyLCAkdG90YWxSZWFkLCAkbXNnTGVuIC0gJHRvdGFsUmVhZCkKICAgICAgICBpZiAoJGNodW5rIC1sZSAwKSB7IGJyZWFrIH0KICAgICAgICAkdG90YWxSZWFkICs9ICRjaHVuawogICAgfQoKICAgIGlmICgkdG90YWxSZWFkIC1sdCAkbXNnTGVuKSB7CiAgICAgICAgYnJlYWsKICAgIH0KCiAgICAkcmF3VGV4dCA9IFtTeXN0ZW0uVGV4dC5FbmNvZGluZ106OlVURjguR2V0U3RyaW5nKCRidWZmZXIsIDAsICR0b3RhbFJlYWQpCiAgICAKICAgIHRyeSB7CiAgICAgICAgJG1zZyA9ICRyYXdUZXh0IHwgQ29udmVydEZyb20tSnNvbgogICAgICAgICRhY3Rpb24gPSAkbXNnLmFjdGlvbgoKICAgICAgICBpZiAoJGFjdGlvbiAtZXEgInBpbmciKSB7CiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJvayIKICAgICAgICAgICAgICAgIHBvbmcgPSAkdHJ1ZQogICAgICAgICAgICAgICAgdmVyc2lvbiA9ICIxLjAuMCIKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBlbHNlaWYgKCRhY3Rpb24gLWVxICJnZXRfc3RhdHVzIikgewogICAgICAgICAgICAkYXBwc0xpZ2h0ID0gMQogICAgICAgICAgICAkc3lzTGlnaHQgPSAxCiAgICAgICAgICAgIHRyeSB7CiAgICAgICAgICAgICAgICAkcHJvcCA9IEdldC1JdGVtUHJvcGVydHkgLVBhdGggJHJlZ0tleSAtRXJyb3JBY3Rpb24gU2lsZW50bHlDb250aW51ZQogICAgICAgICAgICAgICAgaWYgKCRudWxsIC1uZSAkcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSkgeyAkYXBwc0xpZ2h0ID0gW2ludF0kcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSB9CiAgICAgICAgICAgICAgICBpZiAoJG51bGwgLW5lICRwcm9wLlN5c3RlbVVzZXNMaWdodFRoZW1lKSB7ICRzeXNMaWdodCA9IFtpbnRdJHByb3AuU3lzdGVtVXNlc0xpZ2h0VGhlbWUgfQogICAgICAgICAgICB9IGNhdGNoIHt9CgogICAgICAgICAgICAkbW9kZSA9IGlmICgkYXBwc0xpZ2h0IC1lcSAxKSB7ICJsaWdodCIgfSBlbHNlIHsgImRhcmsiIH0KICAgICAgICAgICAgU2VuZC1OYXRpdmVSZXNwb25zZSBAewogICAgICAgICAgICAgICAgc3RhdHVzID0gIm9rIgogICAgICAgICAgICAgICAgbW9kZSA9ICRtb2RlCiAgICAgICAgICAgICAgICBhcHBzVXNlTGlnaHRUaGVtZSA9ICRhcHBzTGlnaHQKICAgICAgICAgICAgICAgIHN5c3RlbVVzZXNMaWdodFRoZW1lID0gJHN5c0xpZ2h0CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZWxzZWlmICgkYWN0aW9uIC1lcSAic2V0X3RoZW1lIikgewogICAgICAgICAgICAkdGFyZ2V0TW9kZSA9ICRtc2cubW9kZSAjICJsaWdodCIsICJkYXJrIiwgb3IgInRvZ2dsZSIKICAgICAgICAgICAgJGN1cnJlbnRBcHBzID0gMQogICAgICAgICAgICB0cnkgewogICAgICAgICAgICAgICAgJHByb3AgPSBHZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUKICAgICAgICAgICAgICAgIGlmICgkbnVsbCAtbmUgJHByb3AuQXBwc1VzZUxpZ2h0VGhlbWUpIHsgJGN1cnJlbnRBcHBzID0gW2ludF0kcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSB9CiAgICAgICAgICAgIH0gY2F0Y2gge30KCiAgICAgICAgICAgICRuZXdMaWdodFZhbCA9IDEKICAgICAgICAgICAgaWYgKCR0YXJnZXRNb2RlIC1lcSAidG9nZ2xlIikgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gaWYgKCRjdXJyZW50QXBwcyAtZXEgMSkgeyAwIH0gZWxzZSB7IDEgfQogICAgICAgICAgICB9IGVsc2VpZiAoJHRhcmdldE1vZGUgLWVxICJkYXJrIikgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gMAogICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gMQogICAgICAgICAgICB9CgogICAgICAgICAgICAjIFNldCBBcHBzIHRoZW1lICh0aGlzIGNvbnRyb2xzIENocm9tZSBVSSB0YWJzLCB0b29sYmFyLCBvbW5pYm94KQogICAgICAgICAgICBTZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLU5hbWUgIkFwcHNVc2VMaWdodFRoZW1lIiAtVmFsdWUgJG5ld0xpZ2h0VmFsIC1UeXBlIERXb3JkIC1Gb3JjZQogICAgICAgICAgICAKICAgICAgICAgICAgIyBPcHRpb25hbGx5IHN5bmMgU3lzdGVtIHRoZW1lIGlmIHJlcXVlc3RlZCAoZGVmYXVsdCB0cnVlKQogICAgICAgICAgICBpZiAoJG51bGwgLWVxICRtc2cuc3luY1N5c3RlbSAtb3IgJG1zZy5zeW5jU3lzdGVtIC1lcSAkdHJ1ZSkgewogICAgICAgICAgICAgICAgU2V0LUl0ZW1Qcm9wZXJ0eSAtUGF0aCAkcmVnS2V5IC1OYW1lICJTeXN0ZW1Vc2VzTGlnaHRUaGVtZSIgLVZhbHVlICRuZXdMaWdodFZhbCAtVHlwZSBEV29yZCAtRm9yY2UKICAgICAgICAgICAgfQoKICAgICAgICAgICAgIyBOb3RpZnkgZGVza3RvcCBhcHBsaWNhdGlvbnMgdG8gaW1tZWRpYXRlbHkgcmVwYWludAogICAgICAgICAgICBOb3RpZnktVGhlbWVDaGFuZ2UKCiAgICAgICAgICAgICRmaW5hbE1vZGUgPSBpZiAoJG5ld0xpZ2h0VmFsIC1lcSAxKSB7ICJsaWdodCIgfSBlbHNlIHsgImRhcmsiIH0KICAgICAgICAgICAgJGN1cnJTeXNMaWdodCA9IDEKICAgICAgICAgICAgdHJ5IHsKICAgICAgICAgICAgICAgICRjdXJyU3lzTGlnaHQgPSBbaW50XShHZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUpLlN5c3RlbVVzZXNMaWdodFRoZW1lCiAgICAgICAgICAgIH0gY2F0Y2gge30KCiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJvayIKICAgICAgICAgICAgICAgIG1vZGUgPSAkZmluYWxNb2RlCiAgICAgICAgICAgICAgICBhcHBzVXNlTGlnaHRUaGVtZSA9ICRuZXdMaWdodFZhbAogICAgICAgICAgICAgICAgc3lzdGVtVXNlc0xpZ2h0VGhlbWUgPSAkY3VyclN5c0xpZ2h0CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZWxzZSB7CiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJlcnJvciIKICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSAiVW5rbm93biBhY3Rpb246ICRhY3Rpb24iCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9IGNhdGNoIHsKICAgICAgICBTZW5kLU5hdGl2ZVJlc3BvbnNlIEB7CiAgICAgICAgICAgIHN0YXR1cyA9ICJlcnJvciIKICAgICAgICAgICAgbWVzc2FnZSA9ICRfLkV4Y2VwdGlvbi5NZXNzYWdlCiAgICAgICAgfQogICAgfQp9Cg==";
+  const HOST_PS1_BASE64 = "IyBDaHJvbWUgQXBwZWFyYW5jZSBTd2l0Y2hlciAtIE5hdGl2ZSBNZXNzYWdpbmcgSG9zdCAoV2luZG93cykKIyBIYW5kbGVzIEpTT04gbWVzc2FnZXMgdmlhIHN0YW5kYXJkIGlucHV0L291dHB1dCB3aXRoIDQtYnl0ZSBwcmVmaXguCgpbQ29uc29sZV06OklucHV0RW5jb2RpbmcgPSBbU3lzdGVtLlRleHQuRW5jb2RpbmddOjpVVEY4CltDb25zb2xlXTo6T3V0cHV0RW5jb2RpbmcgPSBbU3lzdGVtLlRleHQuRW5jb2RpbmddOjpVVEY4Cgokc3RkaW4gPSBbU3lzdGVtLkNvbnNvbGVdOjpPcGVuU3RhbmRhcmRJbnB1dCgpCiRzdGRvdXQgPSBbU3lzdGVtLkNvbnNvbGVdOjpPcGVuU3RhbmRhcmRPdXRwdXQoKQoKIyBDIyBkZWZpbml0aW9uIGZvciBicm9hZGNhc3RpbmcgV01fU0VUVElOR0NIQU5HRSB0byBlbnN1cmUgaW5zdGFudCBVSSByZWFjdGlvbgpBZGQtVHlwZSAtVHlwZURlZmluaXRpb24gQCcKdXNpbmcgU3lzdGVtOwp1c2luZyBTeXN0ZW0uUnVudGltZS5JbnRlcm9wU2VydmljZXM7CgpwdWJsaWMgY2xhc3MgTmF0aXZlVGhlbWVOb3RpZmllciB7CiAgICBbRGxsSW1wb3J0KCJ1c2VyMzIuZGxsIiwgU2V0TGFzdEVycm9yID0gdHJ1ZSwgQ2hhclNldCA9IENoYXJTZXQuQXV0byldCiAgICBwdWJsaWMgc3RhdGljIGV4dGVybiBJbnRQdHIgU2VuZE1lc3NhZ2VUaW1lb3V0KAogICAgICAgIEludFB0ciBoV25kLAogICAgICAgIHVpbnQgTXNnLAogICAgICAgIFVJbnRQdHIgd1BhcmFtLAogICAgICAgIHN0cmluZyBsUGFyYW0sCiAgICAgICAgdWludCBmdUZsYWdzLAogICAgICAgIHVpbnQgdVRpbWVvdXQsCiAgICAgICAgb3V0IFVJbnRQdHIgbHBkd1Jlc3VsdCk7Cn0KJ0AKCmZ1bmN0aW9uIE5vdGlmeS1UaGVtZUNoYW5nZSB7CiAgICB0cnkgewogICAgICAgICRyZXN1bHQgPSBbVUludFB0cl06Olplcm8KICAgICAgICAjIEhXTkRfQlJPQURDQVNUID0gMHhmZmZmLCBXTV9TRVRUSU5HQ0hBTkdFID0gMHgwMDFBLCBTTVRPX0FCT1JUSUZIVU5HID0gMgogICAgICAgIFt2b2lkXVtOYXRpdmVUaGVtZU5vdGlmaWVyXTo6U2VuZE1lc3NhZ2VUaW1lb3V0KFtJbnRQdHJdMHhmZmZmLCAweDAwMUEsIFtVSW50UHRyXTo6WmVybywgIkltbWVyc2l2ZUNvbG9yU2V0IiwgMiwgMjAwLCBbcmVmXSRyZXN1bHQpCiAgICB9IGNhdGNoIHsKICAgICAgICAjIEZhbGxiYWNrIHdpdGhvdXQgZmFpbGluZwogICAgfQp9CgpmdW5jdGlvbiBTZW5kLU5hdGl2ZVJlc3BvbnNlKFtoYXNodGFibGVdJGRhdGEpIHsKICAgICRqc29uID0gKCRkYXRhIHwgQ29udmVydFRvLUpzb24gLUNvbXByZXNzKQogICAgJGJ5dGVzID0gW1N5c3RlbS5UZXh0LkVuY29kaW5nXTo6VVRGOC5HZXRCeXRlcygkanNvbikKICAgICRsZW5CeXRlcyA9IFtTeXN0ZW0uQml0Q29udmVydGVyXTo6R2V0Qnl0ZXMoW2ludF0kYnl0ZXMuTGVuZ3RoKQoKICAgIFt2b2lkXSRzdGRvdXQuV3JpdGUoJGxlbkJ5dGVzLCAwLCA0KQogICAgW3ZvaWRdJHN0ZG91dC5Xcml0ZSgkYnl0ZXMsIDAsICRieXRlcy5MZW5ndGgpCiAgICBbdm9pZF0kc3Rkb3V0LkZsdXNoKCkKfQoKJHJlZ0tleSA9ICJIS0NVOlxTb2Z0d2FyZVxNaWNyb3NvZnRcV2luZG93c1xDdXJyZW50VmVyc2lvblxUaGVtZXNcUGVyc29uYWxpemUiCgp3aGlsZSAoJHRydWUpIHsKICAgICRsZW5CeXRlcyA9IE5ldy1PYmplY3QgYnl0ZVtdIDQKICAgICRyZWFkID0gJHN0ZGluLlJlYWQoJGxlbkJ5dGVzLCAwLCA0KQogICAgaWYgKCRyZWFkIC1sdCA0KSB7CiAgICAgICAgIyBFbmQgb2Ygc3RyZWFtIC8gQ2hyb21lIGRpc2Nvbm5lY3RlZAogICAgICAgIGJyZWFrCiAgICB9CgogICAgJG1zZ0xlbiA9IFtTeXN0ZW0uQml0Q29udmVydGVyXTo6VG9JbnQzMigkbGVuQnl0ZXMsIDApCiAgICBpZiAoJG1zZ0xlbiAtbGUgMCAtb3IgJG1zZ0xlbiAtZ3QgMTA0ODU3NikgewogICAgICAgICMgSW52YWxpZCBsZW5ndGgKICAgICAgICBicmVhawogICAgfQoKICAgICRidWZmZXIgPSBOZXctT2JqZWN0IGJ5dGVbXSAkbXNnTGVuCiAgICAkdG90YWxSZWFkID0gMAogICAgd2hpbGUgKCR0b3RhbFJlYWQgLWx0ICRtc2dMZW4pIHsKICAgICAgICAkY2h1bmsgPSAkc3RkaW4uUmVhZCgkYnVmZmVyLCAkdG90YWxSZWFkLCAkbXNnTGVuIC0gJHRvdGFsUmVhZCkKICAgICAgICBpZiAoJGNodW5rIC1sZSAwKSB7IGJyZWFrIH0KICAgICAgICAkdG90YWxSZWFkICs9ICRjaHVuawogICAgfQoKICAgIGlmICgkdG90YWxSZWFkIC1sdCAkbXNnTGVuKSB7CiAgICAgICAgYnJlYWsKICAgIH0KCiAgICAkcmF3VGV4dCA9IFtTeXN0ZW0uVGV4dC5FbmNvZGluZ106OlVURjguR2V0U3RyaW5nKCRidWZmZXIsIDAsICR0b3RhbFJlYWQpCiAgICAKICAgIHRyeSB7CiAgICAgICAgJG1zZyA9ICRyYXdUZXh0IHwgQ29udmVydEZyb20tSnNvbgogICAgICAgICRhY3Rpb24gPSAkbXNnLmFjdGlvbgoKICAgICAgICBpZiAoJGFjdGlvbiAtZXEgInBpbmciKSB7CiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJvayIKICAgICAgICAgICAgICAgIHBvbmcgPSAkdHJ1ZQogICAgICAgICAgICAgICAgdmVyc2lvbiA9ICIxLjAuMSIKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBlbHNlaWYgKCRhY3Rpb24gLWVxICJnZXRfc3RhdHVzIikgewogICAgICAgICAgICAkYXBwc0xpZ2h0ID0gMQogICAgICAgICAgICAkc3lzTGlnaHQgPSAxCiAgICAgICAgICAgIHRyeSB7CiAgICAgICAgICAgICAgICAkcHJvcCA9IEdldC1JdGVtUHJvcGVydHkgLVBhdGggJHJlZ0tleSAtRXJyb3JBY3Rpb24gU2lsZW50bHlDb250aW51ZQogICAgICAgICAgICAgICAgaWYgKCRudWxsIC1uZSAkcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSkgeyAkYXBwc0xpZ2h0ID0gW2ludF0kcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSB9CiAgICAgICAgICAgICAgICBpZiAoJG51bGwgLW5lICRwcm9wLlN5c3RlbVVzZXNMaWdodFRoZW1lKSB7ICRzeXNMaWdodCA9IFtpbnRdJHByb3AuU3lzdGVtVXNlc0xpZ2h0VGhlbWUgfQogICAgICAgICAgICB9IGNhdGNoIHt9CgogICAgICAgICAgICAkbW9kZSA9IGlmICgkYXBwc0xpZ2h0IC1lcSAxKSB7ICJsaWdodCIgfSBlbHNlIHsgImRhcmsiIH0KICAgICAgICAgICAgU2VuZC1OYXRpdmVSZXNwb25zZSBAewogICAgICAgICAgICAgICAgc3RhdHVzID0gIm9rIgogICAgICAgICAgICAgICAgbW9kZSA9ICRtb2RlCiAgICAgICAgICAgICAgICBhcHBzVXNlTGlnaHRUaGVtZSA9ICRhcHBzTGlnaHQKICAgICAgICAgICAgICAgIHN5c3RlbVVzZXNMaWdodFRoZW1lID0gJHN5c0xpZ2h0CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZWxzZWlmICgkYWN0aW9uIC1lcSAic2V0X3RoZW1lIikgewogICAgICAgICAgICAkdGFyZ2V0TW9kZSA9ICRtc2cubW9kZSAjICJsaWdodCIsICJkYXJrIiwgb3IgInRvZ2dsZSIKICAgICAgICAgICAgJGN1cnJlbnRBcHBzID0gMQogICAgICAgICAgICB0cnkgewogICAgICAgICAgICAgICAgJHByb3AgPSBHZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUKICAgICAgICAgICAgICAgIGlmICgkbnVsbCAtbmUgJHByb3AuQXBwc1VzZUxpZ2h0VGhlbWUpIHsgJGN1cnJlbnRBcHBzID0gW2ludF0kcHJvcC5BcHBzVXNlTGlnaHRUaGVtZSB9CiAgICAgICAgICAgIH0gY2F0Y2gge30KCiAgICAgICAgICAgICRuZXdMaWdodFZhbCA9IDEKICAgICAgICAgICAgaWYgKCR0YXJnZXRNb2RlIC1lcSAidG9nZ2xlIikgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gaWYgKCRjdXJyZW50QXBwcyAtZXEgMSkgeyAwIH0gZWxzZSB7IDEgfQogICAgICAgICAgICB9IGVsc2VpZiAoJHRhcmdldE1vZGUgLWVxICJkYXJrIikgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gMAogICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgJG5ld0xpZ2h0VmFsID0gMQogICAgICAgICAgICB9CgogICAgICAgICAgICAjIFNldCBBcHBzIHRoZW1lICh0aGlzIGNvbnRyb2xzIENocm9tZSBVSSB0YWJzLCB0b29sYmFyLCBvbW5pYm94KQogICAgICAgICAgICBTZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLU5hbWUgIkFwcHNVc2VMaWdodFRoZW1lIiAtVmFsdWUgJG5ld0xpZ2h0VmFsIC1UeXBlIERXb3JkIC1Gb3JjZQogICAgICAgICAgICAKICAgICAgICAgICAgIyBPcHRpb25hbGx5IHN5bmMgU3lzdGVtIHRoZW1lIGlmIHJlcXVlc3RlZCAoZGVmYXVsdCB0cnVlKQogICAgICAgICAgICBpZiAoJG51bGwgLWVxICRtc2cuc3luY1N5c3RlbSAtb3IgJG1zZy5zeW5jU3lzdGVtIC1lcSAkdHJ1ZSkgewogICAgICAgICAgICAgICAgU2V0LUl0ZW1Qcm9wZXJ0eSAtUGF0aCAkcmVnS2V5IC1OYW1lICJTeXN0ZW1Vc2VzTGlnaHRUaGVtZSIgLVZhbHVlICRuZXdMaWdodFZhbCAtVHlwZSBEV29yZCAtRm9yY2UKICAgICAgICAgICAgfQoKICAgICAgICAgICAgIyBOb3RpZnkgZGVza3RvcCBhcHBsaWNhdGlvbnMgdG8gaW1tZWRpYXRlbHkgcmVwYWludAogICAgICAgICAgICBOb3RpZnktVGhlbWVDaGFuZ2UKCiAgICAgICAgICAgICRmaW5hbE1vZGUgPSBpZiAoJG5ld0xpZ2h0VmFsIC1lcSAxKSB7ICJsaWdodCIgfSBlbHNlIHsgImRhcmsiIH0KICAgICAgICAgICAgJGN1cnJTeXNMaWdodCA9IDEKICAgICAgICAgICAgdHJ5IHsKICAgICAgICAgICAgICAgICRjdXJyU3lzTGlnaHQgPSBbaW50XShHZXQtSXRlbVByb3BlcnR5IC1QYXRoICRyZWdLZXkgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUpLlN5c3RlbVVzZXNMaWdodFRoZW1lCiAgICAgICAgICAgIH0gY2F0Y2gge30KCiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJvayIKICAgICAgICAgICAgICAgIG1vZGUgPSAkZmluYWxNb2RlCiAgICAgICAgICAgICAgICBhcHBzVXNlTGlnaHRUaGVtZSA9ICRuZXdMaWdodFZhbAogICAgICAgICAgICAgICAgc3lzdGVtVXNlc0xpZ2h0VGhlbWUgPSAkY3VyclN5c0xpZ2h0CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgZWxzZSB7CiAgICAgICAgICAgIFNlbmQtTmF0aXZlUmVzcG9uc2UgQHsKICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJlcnJvciIKICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSAiVW5rbm93biBhY3Rpb246ICRhY3Rpb24iCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9IGNhdGNoIHsKICAgICAgICBTZW5kLU5hdGl2ZVJlc3BvbnNlIEB7CiAgICAgICAgICAgIHN0YXR1cyA9ICJlcnJvciIKICAgICAgICAgICAgbWVzc2FnZSA9ICRfLkV4Y2VwdGlvbi5NZXNzYWdlCiAgICAgICAgfQogICAgfQp9Cg==";
 
   function downloadCompanionInstaller() {
     const extId = chrome.runtime.id || "pmemlchnjmekopkkmjbbhfcfbmpbkclo";
@@ -590,10 +596,10 @@ pause
       "#### Subsystem Checklist:",
       `- Chrome: ${reportStatusSummary(lastDiagnosticReport.chrome)}`,
       `- Extension: ${reportStatusSummary(lastDiagnosticReport.extension)}`,
-      `- Native Host: ${lastDiagnosticReport.nativeHost?.installed ? "✓ Installed" : "✕ Not Installed"} (${lastDiagnosticReport.nativeHost?.error || "OK"})`,
-      `- Native Messaging: ${lastDiagnosticReport.nativeMessaging?.connected ? "✓ Connected" : "✕ Disconnected"} (Latency: ${lastDiagnosticReport.nativeMessaging?.latencyMs || "-"}ms)`,
-      `- Windows Theme API: ${lastDiagnosticReport.themeApi?.available ? "✓ Available" : "✕ Unavailable"} (AppsUseLightTheme: ${lastDiagnosticReport.themeApi?.appsUseLightTheme})`,
-      `- Chrome Device Mode: ${lastDiagnosticReport.deviceMode?.matchesOsTheme ? "✓ Matching System" : "✕ Mismatched"} (Browser scheme: ${lastDiagnosticReport.deviceMode?.browserColorScheme})`,
+      `- Native Host: ${lastDiagnosticReport.nativeHost?.installed ? "âœ“ Installed" : "âœ• Not Installed"} (${lastDiagnosticReport.nativeHost?.error || "OK"})`,
+      `- Native Messaging: ${lastDiagnosticReport.nativeMessaging?.connected ? "âœ“ Connected" : "âœ• Disconnected"} (Latency: ${lastDiagnosticReport.nativeMessaging?.latencyMs || "-"}ms)`,
+      `- Windows Theme API: ${lastDiagnosticReport.themeApi?.available ? "âœ“ Available" : "âœ• Unavailable"} (AppsUseLightTheme: ${lastDiagnosticReport.themeApi?.appsUseLightTheme})`,
+      `- Chrome Device Mode: ${lastDiagnosticReport.deviceMode?.matchesOsTheme ? "âœ“ Matching System" : "âœ• Mismatched"} (Browser scheme: ${lastDiagnosticReport.deviceMode?.browserColorScheme})`,
       "",
       "#### Raw Telemetry:",
       "```json",
@@ -623,8 +629,8 @@ pause
 
   function reportStatusSummary(obj) {
     if (!obj) return "N/A";
-    if (obj.version) return `✓ Detected (v${obj.version})`;
-    return "✓ OK";
+    if (obj.version) return `âœ“ Detected (v${obj.version})`;
+    return "âœ“ OK";
   }
 
   // Auto-run diagnostics immediately on page open
@@ -638,3 +644,4 @@ pause
     }, 400);
   }
 });
+

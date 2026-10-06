@@ -83,7 +83,7 @@ while ($true) {
             Send-NativeResponse @{
                 status = "ok"
                 pong = $true
-                version = "1.0.0"
+                version = "1.0.1"
             }
         }
         elseif ($action -eq "get_status") {
