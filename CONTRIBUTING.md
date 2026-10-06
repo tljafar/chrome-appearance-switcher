@@ -28,7 +28,7 @@ This project is an open-source Chrome extension paired with a lightweight Native
 
 1. Clone your fork:
    ```bash
-   git clone https://github.com/your-username/chrome-appearance-switcher.git
+   git clone https://github.com/tljafar/chrome-appearance-switcher.git
    cd chrome-appearance-switcher
    ```
 2. Register the local native host:

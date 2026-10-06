@@ -70,12 +70,12 @@ Google reviewers ask why each permission is required:
 Because Google Chrome Web Store does not host Windows batch/executable files, host the companion archive:
 
 ### Option A: GitHub Releases (Recommended - 100% Free & Fast)
-1. Create a GitHub repository (e.g., `https://github.com/your-username/chrome-appearance-switcher`).
+1. Create a GitHub repository (e.g., `https://github.com/tljafar/chrome-appearance-switcher`).
 2. Go to **Releases** → **Draft a new release** (tag: `v1.0.0`).
 3. Drag and drop **`release/native-companion-installer-v1.0.0.zip`**.
 4. Publish release. You will get a permanent download URL:
    ```text
-   https://github.com/your-username/chrome-appearance-switcher/releases/latest/download/native-companion-installer-v1.0.0.zip
+   https://github.com/tljafar/chrome-appearance-switcher/releases/latest/download/native-companion-installer-v1.0.0.zip
    ```
 5. Update the URL in `popup/popup.js` (`btnDownloadHost` handler).
 

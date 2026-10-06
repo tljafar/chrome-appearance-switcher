@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnDownloadHost) {
     btnDownloadHost.addEventListener("click", () => {
       chrome.tabs.create({
-        url: "https://github.com/your-username/chrome-appearance-switcher/releases/latest"
+        url: "https://github.com/tljafar/chrome-appearance-switcher/releases/latest"
       });
     });
   }
