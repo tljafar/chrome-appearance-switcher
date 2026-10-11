@@ -6,6 +6,10 @@
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue.svg)](#)
 [![Privacy: 100% Local](https://img.shields.io/badge/Privacy-100%25%20Local%20%7C%20Zero%20Telemetry-green.svg)](#)
 
+<p align="center">
+  <img src="assets/banner.png" alt="Chrome Appearance Switcher" width="100%">
+</p>
+
 > Switch the **actual Google Chrome browser UI** (window frame, tabs, toolbar, omnibox, and new tab) between **Light** and **Dark** mode directly from an extension popup, global hotkey (`Alt + Shift + D`), or automated diagnostics suite.
 
 🛒 **[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/chrome-appearance-switche/giipkopljmnjmlkecknneemdkobcapnk)**
@@ -141,7 +145,8 @@ chrome-appearance-switcher/
 │   ├── host_launcher.bat      # Process launcher executed by Chrome via stdio pipes
 │   ├── install_host.bat       # 1-click Windows registry installer
 │   └── uninstall_host.bat     # Clean companion uninstaller
-├── store_assets/              # Chrome Web Store promo graphics (440x280, 1400x560)
+├── assets/
+│   └── banner.png             # GitHub README hero banner & UI preview
 ├── icons/                     # Crisp icons (16px, 32px, 48px, 128px)
 ├── build_release.bat          # 1-click multi-package release build runner
 ├── build_release.ps1          # PowerShell packager producing CWS zip, companion zip, and client zip
