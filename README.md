@@ -1,7 +1,7 @@
 # Chrome Appearance Switcher
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Available%20Now-brightgreen.svg?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/chrome-appearance-switche/giipkopljmnjmlkecknneemdkobcapnk)
-[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Featured-orange?logo=producthunt&logoColor=white)](https://www.producthunt.com/posts/chrome-appearance-switcher)
+[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Featured-orange?logo=producthunt&logoColor=white)](https://www.producthunt.com/products/chrome-appearance-switcher)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Chrome MV3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-success.svg)](#)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue.svg)](#)
@@ -13,7 +13,13 @@
 
 > Switch the **actual Google Chrome browser UI** (window frame, tabs, toolbar, omnibox, and new tab) between **Light** and **Dark** mode directly from an extension popup, global hotkey (`Alt + Shift + D`), or automated diagnostics suite.
 
-🛒 **[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/chrome-appearance-switche/giipkopljmnjmlkecknneemdkobcapnk)** &nbsp;|&nbsp; 😻 **[Support on Product Hunt](https://www.producthunt.com/posts/chrome-appearance-switcher)**
+<p align="center">
+  <a href="https://www.producthunt.com/products/chrome-appearance-switcher?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-chrome-appearance-switcher" target="_blank" rel="noopener noreferrer">
+    <img alt="Chrome Appearance Switcher - Switch Chrome's actual browser UI to Dark Mode instantly | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1283126&theme=light" />
+  </a>
+</p>
+
+🛒 **[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/chrome-appearance-switche/giipkopljmnjmlkecknneemdkobcapnk)** &nbsp;|&nbsp; 😻 **[Support on Product Hunt](https://www.producthunt.com/products/chrome-appearance-switcher)**
 
 ---
 
